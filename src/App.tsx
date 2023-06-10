@@ -1,14 +1,8 @@
 import { Outlet } from 'react-router-dom'
-
-import '../src/css/App.css'
+import './css/App.css'
 
 function App() {
-
-  return (
-    <>
-      <Outlet/>
-    </>
-  )
+  return <Outlet />
 }
 
 export default App
