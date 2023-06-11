@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  padding-top: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   background-color: #b7d7de;
 
   .submit-button {
@@ -10,11 +11,6 @@ export const Container = styled.div`
     background-color: #e8fcf6;
     border-radius: 10px;
   }
-`
-
-export const TitleContainer = styled.div`
-  text-align: center;
-  margin-bottom: 20px;
 `
 
 export const MainContainer = styled.div`

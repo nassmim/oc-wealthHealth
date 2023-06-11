@@ -5,14 +5,12 @@ import {
   MainContainer,
   SectionEmployeeForm,
   Container,
-  TitleContainer,
   ButtonStyled,
   FormStyled,
   FieldStyled,
   FieldsetStyled,
   DepartmentField,
 } from './style.ts'
-import { Title } from '../../style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
 import SelectDropdown from './SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
@@ -31,10 +29,6 @@ const CreateEmployeeForm = () => {
   return (
     <>
       <Container>
-        <TitleContainer>
-          <Title>HRnet</Title>
-        </TitleContainer>
-
         <MainContainer>
           <ButtonStyled>
             <a href="employee-list.html">View Current Employees</a>
