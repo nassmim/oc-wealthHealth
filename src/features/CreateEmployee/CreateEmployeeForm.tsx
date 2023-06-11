@@ -180,10 +180,9 @@ const CreateEmployeeForm = () => {
             <button className="submit-button" onClick={() => trigger()}>
               Save
             </button>
+            <SuccessModal />
           </SectionEmployeeForm>
         </MainContainer>
-
-        <SuccessModal />
       </Container>
     </>
   )
