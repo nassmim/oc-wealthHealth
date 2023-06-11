@@ -13,6 +13,7 @@ import {
 import { Title, ButtonGeneric } from '../../style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
 import SelectDropdown from './SelectDropdown.tsx'
+import SuccessModal from './SuccessModal.tsx'
 
 const CreateEmployeeForm = () => {
   const {
@@ -170,9 +171,7 @@ const CreateEmployeeForm = () => {
           </SectionEmployeeForm>
         </MainContainer>
 
-        <div id="confirmation" className="modal">
-          Employee Created!
-        </div>
+        <SuccessModal />
       </Container>
     </>
   )
