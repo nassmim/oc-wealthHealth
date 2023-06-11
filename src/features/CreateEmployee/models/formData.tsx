@@ -35,21 +35,21 @@ const dateSchema = z
   })
   .max(dateHeighteenYearsAgo, { message: 'Employee cannot be under 18yo' })
 
-const addressElementSchema = z
+const stringRequiredSchema = z
   .string({ required_error: 'Field is required' })
   .trim()
 
 const addressSchema = z.object({
-  street: addressElementSchema,
-  city: addressElementSchema,
-  state: addressElementSchema,
+  street: stringRequiredSchema,
+  city: stringRequiredSchema,
+  state: stringRequiredSchema,
 })
 
 const addressSchemaWithZipcode = addressSchema.extend({
   zipcode: z.string().regex(/^\d{5}/, { message: 'Must be 5 digit' }),
 })
 
-const departmentSchema = z.coerce.string()
+const departmentSchema = stringRequiredSchema
 
 const formSchema: ZodType<FormData> = z.object({
   firstName: nameSchema,

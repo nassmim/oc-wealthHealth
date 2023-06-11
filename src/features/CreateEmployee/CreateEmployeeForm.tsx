@@ -140,7 +140,7 @@ const CreateEmployeeForm = () => {
                   <label htmlFor="zip-code">Zip Code</label>
                   <input
                     id="zip-code"
-                    type="number"
+                    type="text"
                     {...register('address.zipcode')}
                   />
                   {errors.address?.zipcode && (
@@ -151,16 +151,18 @@ const CreateEmployeeForm = () => {
 
               <FieldStyled>
                 <label htmlFor="department">Department</label>
-                <select id="department" {...register('department')}>
-                  {errors.department && (
-                    <span>{errors.department.message}</span>
+                <Controller
+                  control={control}
+                  name="department"
+                  render={({ field: { onChange } }) => (
+                    <>
+                      <SelectDropdown id="department" onChange={onChange} />
+                      {errors.department && (
+                        <span>{errors.department.message}</span>
+                      )}
+                    </>
                   )}
-                  <option>Sales</option>
-                  <option>Marketing</option>
-                  <option>Engineering</option>
-                  <option>Human Resources</option>
-                  <option>Legal</option>
-                </select>
+                />
               </FieldStyled>
             </FormStyled>
 
