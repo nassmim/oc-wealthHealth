@@ -1,18 +1,18 @@
+import { Link } from 'react-router-dom'
 import { FormData, formSchema } from './models/formData'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Container, MainContainer } from '../../shared/style.ts'
 import {
-  MainContainer,
   SectionEmployeeForm,
-  Container,
-  ButtonStyled,
   FormStyled,
   FieldStyled,
   FieldsetStyled,
   DepartmentField,
 } from './style.ts'
+import { ButtonStyled } from '../../shared/style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
-import SelectDropdown from './SelectDropdown.tsx'
+import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 
 const CreateEmployeeForm = () => {
@@ -31,11 +31,11 @@ const CreateEmployeeForm = () => {
       <Container>
         <MainContainer>
           <ButtonStyled>
-            <a href="employee-list.html">View Current Employees</a>
+            <Link to="/employees-list">View Current Employees</Link>
           </ButtonStyled>
 
           <SectionEmployeeForm>
-            <h2>Create Employee</h2>
+            <h1>Create Employee</h1>
 
             <FormStyled
               onSubmit={handleSubmit(saveEmployee)}
@@ -127,6 +127,7 @@ const CreateEmployeeForm = () => {
                         <SelectDropdown
                           id="state"
                           onChange={onChange}
+                          placeholder="Select his state"
                           backgroundColor="#f1ecec"
                         />
                         {errors.address?.state && (
@@ -160,6 +161,7 @@ const CreateEmployeeForm = () => {
                       <SelectDropdown
                         id="department"
                         onChange={onChange}
+                        placeholder="Select his department"
                         backgroundColor="lightcyan"
                       />
                       {errors.department && (
