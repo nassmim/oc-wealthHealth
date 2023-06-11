@@ -9,8 +9,10 @@ import {
   ButtonStyled,
   FormStyled,
   FieldStyled,
+  FieldsetStyled,
+  DepartmentField,
 } from './style.ts'
-import { Title, ButtonGeneric } from '../../style.ts'
+import { Title } from '../../style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
 import SelectDropdown from './SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
@@ -21,7 +23,7 @@ const CreateEmployeeForm = () => {
     handleSubmit,
     trigger,
     control,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
 
   const saveEmployee = (data: FormData) => console.log(data)
@@ -99,7 +101,7 @@ const CreateEmployeeForm = () => {
                 />
               </FieldStyled>
 
-              <fieldset className="address">
+              <FieldsetStyled>
                 <legend>Address</legend>
                 <FieldStyled>
                   <label htmlFor="street">Street</label>
@@ -128,7 +130,11 @@ const CreateEmployeeForm = () => {
                     name="address.state"
                     render={({ field: { onChange } }) => (
                       <>
-                        <SelectDropdown id="state" onChange={onChange} />
+                        <SelectDropdown
+                          id="state"
+                          onChange={onChange}
+                          backgroundColor="#f1ecec"
+                        />
                         {errors.address?.state && (
                           <span>{errors.address?.state?.message}</span>
                         )}
@@ -148,26 +154,32 @@ const CreateEmployeeForm = () => {
                     <span>{errors.address?.zipcode?.message}</span>
                   )}
                 </FieldStyled>
-              </fieldset>
+              </FieldsetStyled>
 
-              <FieldStyled>
+              <DepartmentField>
                 <label htmlFor="department">Department</label>
                 <Controller
                   control={control}
                   name="department"
                   render={({ field: { onChange } }) => (
                     <>
-                      <SelectDropdown id="department" onChange={onChange} />
+                      <SelectDropdown
+                        id="department"
+                        onChange={onChange}
+                        backgroundColor="lightcyan"
+                      />
                       {errors.department && (
                         <span>{errors.department.message}</span>
                       )}
                     </>
                   )}
                 />
-              </FieldStyled>
+              </DepartmentField>
             </FormStyled>
 
-            <button onClick={() => trigger()}>Save</button>
+            <button className="submit-button" onClick={() => trigger()}>
+              Save
+            </button>
           </SectionEmployeeForm>
         </MainContainer>
 

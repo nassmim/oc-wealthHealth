@@ -34,6 +34,7 @@ const DatePickerCustom = ({
   return (
     <DatePicker
       id={id}
+      wrapperClassName="datepicker"
       calendarContainer={customCalendar}
       renderCustomHeader={customHeaderRender}
       todayButton="Today"
@@ -45,15 +46,6 @@ const DatePickerCustom = ({
         filteredDays?.length ? !filteredDays.includes(date.getDay()) : true
       }
     />
-
-    // <DatePicker
-    //   selected={value}
-    //   onChange={onChange}
-    // highlightDates={(date: Date) =>
-    //   date.getDay() === 1 || date.getDay() === 6
-    // }
-    // filterDate={(date: Date): boolean => date.getDay() !== 0 && date.getDay() !== 6}
-    // />
   )
 }
 export default DatePickerCustom
