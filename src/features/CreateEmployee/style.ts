@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  margin: 20px;
+  padding-top: 10px;
   background-color: #b7d7de;
 
   .submit-button {
@@ -21,10 +21,21 @@ export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   row-gap: 30px;
+  padding-left: 5%;
+  padding-right: 5%;
 `
 
 export const ButtonStyled = styled.button`
   align-self: self-end;
+  background-color: #d9d9d9;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  a {
+    text-decoration: none;
+    color: #216ba5;
+    font-weight: 600;
+  }
 `
 
 export const SectionEmployeeForm = styled.div`
@@ -32,8 +43,6 @@ export const SectionEmployeeForm = styled.div`
   flex-direction: column;
   align-items: center;
   row-gap: 10px;
-  padding-left: 5%;
-  padding-right: 5%;
 `
 
 export const FormStyled = styled.div`
