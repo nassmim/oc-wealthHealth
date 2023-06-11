@@ -21,7 +21,7 @@ const months = [
 type datePickerProps = {
   id: string
   value: Date
-  onChange: (value: Date) => Date
+  onChange: (...event: any[]) => void
   filteredDays: number[] | undefined
 }
 

@@ -38,6 +38,7 @@ const dateSchema = z
 const addressElementSchema = z
   .string({ required_error: 'Field is required' })
   .trim()
+
 const addressSchema = z.object({
   street: addressElementSchema,
   city: addressElementSchema,

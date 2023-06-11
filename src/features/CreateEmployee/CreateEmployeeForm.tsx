@@ -12,6 +12,7 @@ import {
 } from './style.ts'
 import { Title, ButtonGeneric } from '../../style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
+import SelectDropdown from './SelectDropdown.tsx'
 
 const CreateEmployeeForm = () => {
   const {
@@ -49,6 +50,7 @@ const CreateEmployeeForm = () => {
                 <input type="text" id="first-name" {...register('firstName')} />
                 {errors.firstName && <span>{errors.firstName.message}</span>}
               </FieldStyled>
+
               <FieldStyled>
                 <label htmlFor="last-name">Last Name</label>
                 <input type="text" id="last-name" {...register('lastName')} />
@@ -120,16 +122,18 @@ const CreateEmployeeForm = () => {
 
                 <FieldStyled>
                   <label htmlFor="state">State</label>
-                  <select id="state" {...register('address.state')}>
-                    <option value={0}>Alabama</option>
-                    <option value={1}>Idaho</option>
-                    <option value={2}>Illinois</option>
-                    <option value={3}>Oklahoma</option>
-                    <option value={4}>Utah</option>
-                  </select>
-                  {errors.address?.state && (
-                    <span>{errors.address?.state?.message}</span>
-                  )}
+                  <Controller
+                    control={control}
+                    name="address.state"
+                    render={({ field: { onChange } }) => (
+                      <>
+                        <SelectDropdown id="state" onChange={onChange} />
+                        {errors.address?.state && (
+                          <span>{errors.address?.state?.message}</span>
+                        )}
+                      </>
+                    )}
+                  />
                 </FieldStyled>
 
                 <FieldStyled>
