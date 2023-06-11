@@ -3,9 +3,11 @@ import Select from 'react-select'
 const SelectDropdown = ({
   id,
   onChange,
+  backgroundColor,
 }: {
   id: string
   onChange: (...event: any[]) => void
+  backgroundColor: string
 }) => {
   const options = [
     { value: 'chocolate', label: 'Chocolate' },
@@ -22,6 +24,12 @@ const SelectDropdown = ({
       isSearchable
       placeholder="Select your state"
       blurInputOnSelect
+      styles={{
+        control: (baseStyles) => ({
+          ...baseStyles,
+          backgroundColor: backgroundColor,
+        }),
+      }}
     />
   )
 }

@@ -1,7 +1,11 @@
 #root {
-  margin: 0 auto;
+  margin: auto;
 }
 
 html {
   font-size: 100%;
+}
+
+body {
+  background-color: #f1ecec;
 }
