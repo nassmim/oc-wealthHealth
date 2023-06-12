@@ -11,7 +11,10 @@ import {
   DepartmentField,
 } from './style.ts'
 import { ButtonStyled } from '../../shared/style.ts'
-import DatePickerCustom from './DatePickerCustom.tsx'
+import DatePickerCustom from './DatePicker/DatePickerCustom.tsx'
+import DatePickerCustomCalendar from './DatePicker/DatePickerCustomCalendar.tsx'
+import renderCustomDatePickerHeader from './DatePicker/DatePickerCustomHeader.tsx'
+import { CSSObjectWithLabel } from 'react-select'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
@@ -29,18 +32,18 @@ const companyDepartmentOptions: OptionValue[] = [
 ]
 
 const selectDropdownStyles = {
-  control: (baseStyles) => ({
+  control: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
     backgroundColor: 'lightcyan',
     paddingTop: '2px',
     paddingBottom: '2px',
   }),
-  valueContainer: (baseStyles) => ({
+  valueContainer: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
     paddingTop: '0px',
     paddingBottom: '0px',
   }),
-  input: (baseStyles) => ({
+  input: (baseStyles: CSSObjectWithLabel) => ({
     ...baseStyles,
     paddingTop: '0px',
     paddingBottom: '0px',
@@ -97,9 +100,15 @@ const CreateEmployeeForm = () => {
                     <>
                       <DatePickerCustom
                         id="birthdate"
+                        wrapperClassName="datepicker"
+                        renderCustomHeader={renderCustomDatePickerHeader}
+                        calendarContainer={DatePickerCustomCalendar}
+                        todayButton="Today"
+                        isClearable
+                        showIcon
+                        fixedHeight
                         onChange={onChange}
-                        value={value}
-                        renderCustomHeader={true}
+                        selected={value}
                       />
                       {errors.birthdate && (
                         <span>{errors.birthdate.message}</span>
@@ -118,9 +127,17 @@ const CreateEmployeeForm = () => {
                     <>
                       <DatePickerCustom
                         id="start-date"
+                        wrapperClassName="datepicker"
+                        calendarContainer={DatePickerCustomCalendar}
+                        todayButton="Today"
+                        isClearable
+                        showIcon
+                        fixedHeight
+                        filterDate={(date: Date): boolean =>
+                          ![0, 6].includes(date.getDay())
+                        }
                         onChange={onChange}
-                        value={value}
-                        filteredDays={[0, 6]}
+                        selected={value}
                       />
                       {errors.startDate && (
                         <span>{errors.startDate.message}</span>

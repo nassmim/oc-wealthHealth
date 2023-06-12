@@ -57,7 +57,7 @@ export const FieldStyled = styled.div`
   }
 `
 
-export const DatePickerContainer = styled.div`
+export const DatePickerCalendarContainer = styled.div`
   padding: 16px;
   background: #216ba5;
   color: #fff;
