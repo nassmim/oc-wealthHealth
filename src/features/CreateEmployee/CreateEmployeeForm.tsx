@@ -28,6 +28,27 @@ const companyDepartmentOptions: OptionValue[] = [
   { value: 'arizona', label: 'Arizona' },
 ]
 
+const selectDropdownStyles = {
+  control: (baseStyles) => ({
+    ...baseStyles,
+    backgroundColor: 'lightcyan',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+  }),
+  valueContainer: (baseStyles) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+  }),
+  input: (baseStyles) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+    marginTop: '0px',
+    marginBottom: '0px',
+  }),
+}
+
 const CreateEmployeeForm = () => {
   const {
     register,
@@ -143,12 +164,7 @@ const CreateEmployeeForm = () => {
                           inputId="state"
                           onChange={onChange}
                           placeholder="Select his state"
-                          styles={{
-                            control: (baseStyles) => ({
-                              ...baseStyles,
-                              backgroundColor: '#f1ecec',
-                            }),
-                          }}
+                          styles={selectDropdownStyles}
                         />
                         {errors.address?.state && (
                           <span>{errors.address?.state?.message}</span>
@@ -183,12 +199,7 @@ const CreateEmployeeForm = () => {
                         inputId="department"
                         onChange={onChange}
                         placeholder="Select his department"
-                        styles={{
-                          control: (baseStyles) => ({
-                            ...baseStyles,
-                            backgroundColor: 'lightcyan',
-                          }),
-                        }}
+                        styles={selectDropdownStyles}
                       />
                       {errors.department && (
                         <span>{errors.department.message}</span>

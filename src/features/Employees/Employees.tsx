@@ -18,6 +18,41 @@ import TableBody from './TableBody.tsx'
 import TableHead from './TableHead.tsx'
 import { TableColumn } from './types.tsx'
 
+const entriesSelectDropdownStyle = {
+  control: (baseStyles) => ({
+    ...baseStyles,
+    justifyContent: 'space-around',
+    flexWrap: 'nowrap',
+    width: '50px',
+    minHeight: '0px',
+    backgroundColor: '#f1ecec',
+  }),
+  valueContainer: (baseStyles) => ({
+    ...baseStyles,
+    flex: 'none',
+    padding: '2px 0px',
+    overflow: 'visible',
+  }),
+  singleValue: (baseStyles) => ({
+    ...baseStyles,
+    fontSize: '15px',
+    paddingRight: '0px',
+  }),
+  indicatorSeparator: (baseStyles) => ({
+    ...baseStyles,
+    display: 'none',
+  }),
+  dropdownIndicator: (baseStyles) => ({
+    ...baseStyles,
+    padding: '8px 0px',
+    cursor: 'pointer',
+    svg: {
+      width: '15px',
+      paddingLeft: 'Opx',
+    },
+  }),
+}
+
 const columns: TableColumn[] = [
   { label: 'First Name', accessor: 'firstName' },
   { label: 'Last Name', accessor: 'lastName' },
@@ -56,13 +91,7 @@ const Employees = () => {
                 inputId="table-entries-length"
                 onChange={() => console.log('entries changed')}
                 defaultValue={entriesNumberOptions[0]}
-                styles={{
-                  control: (baseStyles) => ({
-                    ...baseStyles,
-                    width: '50px',
-                    backgroundColor: '#f1ecec',
-                  }),
-                }}
+                styles={entriesSelectDropdownStyle}
               />
               <p>entries</p>
             </EntriesLengthChoice>
