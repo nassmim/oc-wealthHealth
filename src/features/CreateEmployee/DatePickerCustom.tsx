@@ -30,7 +30,7 @@ type datePickerProps = {
   value: Date
   onChange: (...event: any[]) => void
   renderCustomHeader?: boolean
-  filteredDays: number[] | undefined
+  filteredDays?: number[] | undefined
 }
 
 const DatePickerCustom = ({
