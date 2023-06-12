@@ -13,6 +13,15 @@ export const FormStyled = styled.div`
   gap: 20px;
   width: 100%;
   margin-bottom: 20px;
+
+  label {
+    width: fit-content;
+  }
+
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 export const FieldStyled = styled.div`
@@ -36,6 +45,10 @@ export const FieldStyled = styled.div`
 
   .datepicker {
     width: 100%;
+
+    .react-datepicker__input-container {
+      display: flex;
+    }
 
     input {
       width: 90%;
@@ -62,8 +75,17 @@ export const FieldsetStyled = styled.fieldset`
   grid-column-start: 1;
   grid-column-end: 3;
   padding-top: 15px;
+
+  @media (max-width: 500px) {
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 export const DepartmentField = styled(FieldStyled)`
   width: 120%;
+
+  @media (max-width: 500px) {
+    width: 100%;
+  }
 `

@@ -65,6 +65,7 @@ const CreateEmployeeForm = () => {
                         id="birthdate"
                         onChange={onChange}
                         value={value}
+                        renderCustomHeader={true}
                       />
                       {errors.birthdate && (
                         <span>{errors.birthdate.message}</span>

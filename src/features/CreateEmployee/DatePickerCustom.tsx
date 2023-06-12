@@ -1,9 +1,16 @@
 import DatePicker, { CalendarContainer } from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { DatePickerHeader, DatePickerContainer } from './style'
+import { CALENDAR_YEAR_START, TODAY } from '../../shared/data/constants'
+import { ReactNode } from 'react'
 
-const years = [2018, 2019, 2020]
-const months = [
+const numberofYears: number = TODAY.getFullYear() - CALENDAR_YEAR_START + 1
+
+const years: number[] = [...Array(numberofYears).keys()].map(
+  (position: number) => CALENDAR_YEAR_START + position
+)
+
+const months: string[] = [
   'January',
   'February',
   'March',
@@ -22,6 +29,7 @@ type datePickerProps = {
   id: string
   value: Date
   onChange: (...event: any[]) => void
+  renderCustomHeader?: boolean
   filteredDays: number[] | undefined
 }
 
@@ -29,6 +37,7 @@ const DatePickerCustom = ({
   id,
   value,
   onChange,
+  renderCustomHeader,
   filteredDays,
 }: datePickerProps) => {
   return (
@@ -36,10 +45,11 @@ const DatePickerCustom = ({
       id={id}
       wrapperClassName="datepicker"
       calendarContainer={customCalendar}
-      renderCustomHeader={customHeaderRender}
+      renderCustomHeader={renderCustomHeader ? customHeaderRender : undefined}
       todayButton="Today"
       isClearable
       showIcon
+      fixedHeight
       selected={value}
       onChange={onChange}
       filterDate={(date: Date): boolean =>
@@ -50,9 +60,15 @@ const DatePickerCustom = ({
 }
 export default DatePickerCustom
 
-const customCalendar = ({ className, children }) => {
+const customCalendar = ({
+  className,
+  children,
+}: {
+  className: string
+  children: ReactNode
+}) => {
   return (
-    <DatePickerContainer style={{}}>
+    <DatePickerContainer>
       <CalendarContainer className={className}>
         <div style={{ position: 'relative' }}>{children}</div>
       </CalendarContainer>
