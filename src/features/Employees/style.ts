@@ -5,6 +5,12 @@ export const EmployeesSection = styled.section``
 export const TableDisplayOptions = styled.div`
   display: flex;
   justify-content: space-between;
+
+  @media (max-width: 767px) {
+    flex-direction: column;
+    row-gap: 20px;
+    align-items: center;
+  }
 `
 
 export const EntriesLengthChoice = styled.div`
@@ -41,6 +47,11 @@ export const TablePagination = styled.div`
     display: flex;
     column-gap: 30px;
   }
+
+  @media (max-width: 767px) {
+    justify-content: center;
+    margin-top: 20px;
+  }
 `
 
 export const EmployeesTable = styled.table`
@@ -59,12 +70,12 @@ export const EmployeesTable = styled.table`
       justify-content: center;
       align-items: center;
       column-gap: 10px;
+    }
 
-      .arrows {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
+    .arrows {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   }
 
@@ -90,6 +101,18 @@ export const EmployeesTable = styled.table`
 
   tbody tr:nth-child(2n) td {
     background: #e2ffa6;
+  }
+
+  @media (max-width: 767px) {
+    font-size: 9px;
+
+    .title {
+      flex-direction: column;
+
+      .arrows {
+        flex-direction: row;
+      }
+    }
   }
 `
 
