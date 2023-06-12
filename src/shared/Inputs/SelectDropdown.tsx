@@ -1,12 +1,23 @@
 import Select from 'react-select'
 
+type OptionValue = {
+  value: string
+  label: string
+}
+
 const SelectDropdown = ({
   id,
   onChange,
+  defaultValue,
+  placeholder,
+  width,
   backgroundColor,
 }: {
   id: string
   onChange: (...event: any[]) => void
+  defaultValue?: OptionValue
+  placeholder?: string
+  width?: string
   backgroundColor: string
 }) => {
   const options = [
@@ -22,12 +33,14 @@ const SelectDropdown = ({
       onChange={(newValue) => onChange(newValue?.label)}
       isClearable
       isSearchable
-      placeholder="Select your state"
+      placeholder={placeholder}
+      defaultValue={defaultValue?.value ? defaultValue : null}
       blurInputOnSelect
       styles={{
         control: (baseStyles) => ({
           ...baseStyles,
           backgroundColor: backgroundColor,
+          width: width ? width : '100%',
         }),
       }}
     />

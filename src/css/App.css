@@ -9,3 +9,7 @@ html {
 body {
   background-color: #f1ecec;
 }
+
+p {
+  margin: 0;
+}
