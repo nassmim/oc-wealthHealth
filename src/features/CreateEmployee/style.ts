@@ -14,6 +14,10 @@ export const FormStyled = styled.div`
   width: 100%;
   margin-bottom: 20px;
 
+  label {
+    width: fit-content;
+  }
+
   @media (max-width: 500px) {
     display: flex;
     flex-direction: column;
