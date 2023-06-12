@@ -14,6 +14,40 @@ import { ButtonStyled } from '../../shared/style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
+import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
+
+const statesOptions: OptionValue[] = [
+  { value: 'alamaba', label: 'Alamaba' },
+  { value: 'alaska', label: 'Alaska' },
+  { value: 'arizona', label: 'Arizona' },
+]
+
+const companyDepartmentOptions: OptionValue[] = [
+  { value: 'alamaba', label: 'Alamaba' },
+  { value: 'alaska', label: 'Alaska' },
+  { value: 'arizona', label: 'Arizona' },
+]
+
+const selectDropdownStyles = {
+  control: (baseStyles) => ({
+    ...baseStyles,
+    backgroundColor: 'lightcyan',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+  }),
+  valueContainer: (baseStyles) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+  }),
+  input: (baseStyles) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+    marginTop: '0px',
+    marginBottom: '0px',
+  }),
+}
 
 const CreateEmployeeForm = () => {
   const {
@@ -126,10 +160,11 @@ const CreateEmployeeForm = () => {
                     render={({ field: { onChange } }) => (
                       <>
                         <SelectDropdown
-                          id="state"
+                          options={statesOptions}
+                          inputId="state"
                           onChange={onChange}
                           placeholder="Select his state"
-                          backgroundColor="#f1ecec"
+                          styles={selectDropdownStyles}
                         />
                         {errors.address?.state && (
                           <span>{errors.address?.state?.message}</span>
@@ -160,10 +195,11 @@ const CreateEmployeeForm = () => {
                   render={({ field: { onChange } }) => (
                     <>
                       <SelectDropdown
-                        id="department"
+                        options={companyDepartmentOptions}
+                        inputId="department"
                         onChange={onChange}
                         placeholder="Select his department"
-                        backgroundColor="lightcyan"
+                        styles={selectDropdownStyles}
                       />
                       {errors.department && (
                         <span>{errors.department.message}</span>

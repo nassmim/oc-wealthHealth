@@ -51,7 +51,7 @@ export const FieldStyled = styled.div`
     }
 
     input {
-      width: 90%;
+      width: 100%;
       background: #e0d9d8;
     }
   }
