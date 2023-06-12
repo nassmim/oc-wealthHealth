@@ -1,8 +1,8 @@
-import { Container, MainContainer } from '../../shared/style'
+import { Container, MainContainer } from '../../shared/style.ts'
 import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
-import { Title } from '../../shared/style'
-import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
+import { Title } from '../../shared/style.ts'
+
 import {
   EntriesLengthChoice,
   SearchField,
@@ -12,9 +12,11 @@ import {
 } from './style.ts'
 
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
-import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
+
 import EmployeesTable from './Table/Table.tsx'
-import { TableColumn } from './types.tsx'
+import type { TableColumn } from './types.tsx'
+import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
+import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
 
 const columns: TableColumn[] = [
   { label: 'First Name', accessor: 'firstName' },
@@ -28,41 +30,6 @@ const columns: TableColumn[] = [
   { label: 'Zipcode', accessor: 'zipcode' },
 ]
 
-const entriesSelectDropdownStyle = {
-  control: (baseStyles) => ({
-    ...baseStyles,
-    justifyContent: 'space-around',
-    flexWrap: 'nowrap',
-    width: '50px',
-    minHeight: '0px',
-    backgroundColor: '#f1ecec',
-  }),
-  valueContainer: (baseStyles) => ({
-    ...baseStyles,
-    flex: 'none',
-    padding: '2px 0px',
-    overflow: 'visible',
-  }),
-  singleValue: (baseStyles) => ({
-    ...baseStyles,
-    fontSize: '15px',
-    paddingRight: '0px',
-  }),
-  indicatorSeparator: (baseStyles) => ({
-    ...baseStyles,
-    display: 'none',
-  }),
-  dropdownIndicator: (baseStyles) => ({
-    ...baseStyles,
-    padding: '8px 0px',
-    cursor: 'pointer',
-    svg: {
-      width: '15px',
-      paddingLeft: 'Opx',
-    },
-  }),
-}
-
 const entriesNumberOptions: OptionValue[] = [
   { value: '1', label: '10' },
   { value: '25', label: '25' },
@@ -70,7 +37,7 @@ const entriesNumberOptions: OptionValue[] = [
   { value: '100', label: '100' },
 ]
 
-const Employees = () => {
+const ViewEmployees = () => {
   return (
     <Container>
       <MainContainer>
@@ -84,13 +51,7 @@ const Employees = () => {
           <TableDisplayOptions>
             <EntriesLengthChoice>
               <p>Show</p>
-              <SelectDropdown
-                options={entriesNumberOptions}
-                inputId="table-entries-length"
-                onChange={() => console.log('entries changed')}
-                defaultValue={entriesNumberOptions[0]}
-                styles={entriesSelectDropdownStyle}
-              />
+              <EntriesNumberSelectDropdown options={entriesNumberOptions} />
               <p>entries</p>
             </EntriesLengthChoice>
 
@@ -127,4 +88,4 @@ const Employees = () => {
   )
 }
 
-export default Employees
+export default ViewEmployees

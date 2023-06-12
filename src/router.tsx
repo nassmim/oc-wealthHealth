@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import App from './App.js'
 import CreateEmployeeForm from './features/CreateEmployee/CreateEmployeeForm.tsx'
-import Employees from './features/Employees/Employees.tsx'
+import ViewEmployees from './features/ViewEmployees/ViewEmployees.tsx'
 
 const router = createBrowserRouter([
   {
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/employees-list',
-        element: <Employees />,
+        element: <ViewEmployees />,
       },
     ],
   },

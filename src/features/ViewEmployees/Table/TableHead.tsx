@@ -1,6 +1,6 @@
 import { Arrow } from '../style.ts'
 import PaginateLeftArrow from '../../../assets/pagination-left-arrow.svg'
-import { TableColumn } from '../types.tsx'
+import type { TableColumn } from '../types.tsx'
 
 const TableHead = ({ columns }: { columns: TableColumn[] }) => {
   return (
