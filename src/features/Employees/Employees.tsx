@@ -13,7 +13,7 @@ import {
 } from './style.ts'
 
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
-
+import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import TableBody from './TableBody.tsx'
 import TableHead from './TableHead.tsx'
 import { TableColumn } from './types.tsx'
@@ -28,6 +28,13 @@ const columns: TableColumn[] = [
   { label: 'City', accessor: 'city' },
   { label: 'State', accessor: 'state' },
   { label: 'Zipcode', accessor: 'zipcode' },
+]
+
+const entriesNumberOptions: OptionValue[] = [
+  { value: '1', label: '10' },
+  { value: '25', label: '25' },
+  { value: '50', label: '50' },
+  { value: '100', label: '100' },
 ]
 
 const Employees = () => {
@@ -45,11 +52,17 @@ const Employees = () => {
             <EntriesLengthChoice>
               <p>Show</p>
               <SelectDropdown
-                id="table-entries-length"
+                options={entriesNumberOptions}
+                inputId="table-entries-length"
                 onChange={() => console.log('entries changed')}
-                defaultValue={{ value: 'chocolate', label: 'Chocolate' }}
-                width="50px"
-                backgroundColor="#f1ecec"
+                defaultValue={entriesNumberOptions[0]}
+                styles={{
+                  control: (baseStyles) => ({
+                    ...baseStyles,
+                    width: '50px',
+                    backgroundColor: '#f1ecec',
+                  }),
+                }}
               />
               <p>entries</p>
             </EntriesLengthChoice>

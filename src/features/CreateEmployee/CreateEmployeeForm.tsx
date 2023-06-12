@@ -14,6 +14,19 @@ import { ButtonStyled } from '../../shared/style.ts'
 import DatePickerCustom from './DatePickerCustom.tsx'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
+import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
+
+const statesOptions: OptionValue[] = [
+  { value: 'alamaba', label: 'Alamaba' },
+  { value: 'alaska', label: 'Alaska' },
+  { value: 'arizona', label: 'Arizona' },
+]
+
+const companyDepartmentOptions: OptionValue[] = [
+  { value: 'alamaba', label: 'Alamaba' },
+  { value: 'alaska', label: 'Alaska' },
+  { value: 'arizona', label: 'Arizona' },
+]
 
 const CreateEmployeeForm = () => {
   const {
@@ -126,10 +139,16 @@ const CreateEmployeeForm = () => {
                     render={({ field: { onChange } }) => (
                       <>
                         <SelectDropdown
-                          id="state"
+                          options={statesOptions}
+                          inputId="state"
                           onChange={onChange}
                           placeholder="Select his state"
-                          backgroundColor="#f1ecec"
+                          styles={{
+                            control: (baseStyles) => ({
+                              ...baseStyles,
+                              backgroundColor: '#f1ecec',
+                            }),
+                          }}
                         />
                         {errors.address?.state && (
                           <span>{errors.address?.state?.message}</span>
@@ -160,10 +179,16 @@ const CreateEmployeeForm = () => {
                   render={({ field: { onChange } }) => (
                     <>
                       <SelectDropdown
-                        id="department"
+                        options={companyDepartmentOptions}
+                        inputId="department"
                         onChange={onChange}
                         placeholder="Select his department"
-                        backgroundColor="lightcyan"
+                        styles={{
+                          control: (baseStyles) => ({
+                            ...baseStyles,
+                            backgroundColor: 'lightcyan',
+                          }),
+                        }}
                       />
                       {errors.department && (
                         <span>{errors.department.message}</span>
