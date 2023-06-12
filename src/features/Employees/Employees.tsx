@@ -8,15 +8,25 @@ import {
   SearchField,
   TableDisplayOptions,
   TablePagination,
-  EmployeesTable,
   Arrow,
 } from './style.ts'
 
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import TableBody from './TableBody.tsx'
-import TableHead from './TableHead.tsx'
+import EmployeesTable from './Table/Table.tsx'
 import { TableColumn } from './types.tsx'
+
+const columns: TableColumn[] = [
+  { label: 'First Name', accessor: 'firstName' },
+  { label: 'Last Name', accessor: 'lastName' },
+  { label: 'Start Date', accessor: 'startDate' },
+  { label: 'Department', accessor: 'department' },
+  { label: 'Date of Birth', accessor: 'birthdate' },
+  { label: 'Street', accessor: 'street' },
+  { label: 'City', accessor: 'city' },
+  { label: 'State', accessor: 'state' },
+  { label: 'Zipcode', accessor: 'zipcode' },
+]
 
 const entriesSelectDropdownStyle = {
   control: (baseStyles) => ({
@@ -52,18 +62,6 @@ const entriesSelectDropdownStyle = {
     },
   }),
 }
-
-const columns: TableColumn[] = [
-  { label: 'First Name', accessor: 'firstName' },
-  { label: 'Last Name', accessor: 'lastName' },
-  { label: 'Start Date', accessor: 'startDate' },
-  { label: 'Department', accessor: 'department' },
-  { label: 'Date of Birth', accessor: 'birthdate' },
-  { label: 'Street', accessor: 'street' },
-  { label: 'City', accessor: 'city' },
-  { label: 'State', accessor: 'state' },
-  { label: 'Zipcode', accessor: 'zipcode' },
-]
 
 const entriesNumberOptions: OptionValue[] = [
   { value: '1', label: '10' },
@@ -121,10 +119,7 @@ const Employees = () => {
           </TablePagination>
 
           <div className="employees-table">
-            <EmployeesTable>
-              <TableHead columns={columns} />
-              <TableBody columns={columns} />
-            </EmployeesTable>
+            <EmployeesTable columns={columns} />
           </div>
         </section>
       </MainContainer>

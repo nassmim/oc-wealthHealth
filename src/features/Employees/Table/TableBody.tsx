@@ -1,6 +1,4 @@
-import { TableColumn } from './types.tsx'
-
-const TableBody = ({ columns }: { columns: TableColumn }) => {
+const TableBody = () => {
   return (
     <tbody>
       <tr>
