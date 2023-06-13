@@ -5,12 +5,10 @@ export type FormData = {
   lastName: string
   birthdate: Date
   startDate: Date
-  address: {
-    street: string
-    city: string
-    state: string
-    zipcode: string
-  }
+  street: string
+  city: string
+  state: string
+  zipcode: string
   department: string
 }
 const nameSchema = z
@@ -39,16 +37,6 @@ const stringRequiredSchema = z
   .string({ required_error: 'Field is required' })
   .trim()
 
-const addressSchema = z.object({
-  street: stringRequiredSchema,
-  city: stringRequiredSchema,
-  state: stringRequiredSchema,
-})
-
-const addressSchemaWithZipcode = addressSchema.extend({
-  zipcode: z.string().regex(/^\d{5}/, { message: 'Must be 5 digit' }),
-})
-
 const departmentSchema = stringRequiredSchema
 
 const formSchema: ZodType<FormData> = z.object({
@@ -56,7 +44,10 @@ const formSchema: ZodType<FormData> = z.object({
   lastName: nameSchema,
   birthdate: dateSchema,
   startDate: dateSchema,
-  address: addressSchemaWithZipcode,
+  street: stringRequiredSchema,
+  city: stringRequiredSchema,
+  state: stringRequiredSchema,
+  zipcode: z.string().regex(/^\d{5}/, { message: 'Must be 5 digit' }),
   department: departmentSchema,
 })
 

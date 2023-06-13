@@ -1,32 +1,28 @@
 {
   "employees": [
     {
-      "employeeId": "1",
+      "id": "1",
       "firstName": "hind",
       "lastName": "gouriach",
       "startDate": "16/10/2023",
       "department": "Souscription",
       "birthdate": "19/01/1994",
-      "address": {
-        "street": "rue ibnou",
-        "city": "Marrakech",
-        "state": "Marrakech",
-        "zipcode": "92345"
-      }
+      "street": "rue ibnou",
+      "city": "Marrakech",
+      "state": "Marrakech",
+      "zipcode": "92345"
     },
     {
-      "employeeId": "2",
+      "id": "2",
       "firstName": "nassim",
       "lastName": "ezzakraoui",
       "startDate": "02/04/1989",
       "department": "Actuariat",
       "birthdate": "06/08/2023",
-      "address": {
-        "street": "rue ibnou",
-        "city": "Casablanca",
-        "state": "Casablanca",
-        "zipcode": "20050"
-      }
+      "street": "rue ibnou",
+      "city": "Casablanca",
+      "state": "Casablanca",
+      "zipcode": "20050"
     }
   ],
 

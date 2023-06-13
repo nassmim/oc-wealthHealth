@@ -23,15 +23,15 @@ import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
 
 const columns: TableColumn[] = [
-  { label: 'First Name', accessor: 'firstName' },
-  { label: 'Last Name', accessor: 'lastName' },
-  { label: 'Start Date', accessor: 'startDate' },
-  { label: 'Department', accessor: 'department' },
-  { label: 'Date of Birth', accessor: 'birthdate' },
-  { label: 'Street', accessor: 'street' },
-  { label: 'City', accessor: 'city' },
-  { label: 'State', accessor: 'state' },
-  { label: 'Zipcode', accessor: 'zipcode' },
+  { label: 'First Name', accessor: 'firstName', sortable: true },
+  { label: 'Last Name', accessor: 'lastName', sortable: true },
+  { label: 'Start Date', accessor: 'startDate', sortable: true },
+  { label: 'Department', accessor: 'department', sortable: true },
+  { label: 'Date of Birth', accessor: 'birthdate', sortable: true },
+  { label: 'Street', accessor: 'street', sortable: true },
+  { label: 'City', accessor: 'city', sortable: true },
+  { label: 'State', accessor: 'state', sortable: true },
+  { label: 'Zipcode', accessor: 'zipcode', sortable: true },
 ]
 
 const entriesNumberOptions: OptionValue[] = [
@@ -52,9 +52,7 @@ const ViewEmployees = () => {
   const employeesSorted = useMemo(() => {
     return employees
       .slice()
-      .sort((a: EmployeeEntity, b: EmployeeEntity) =>
-        b.employeeId.localeCompare(a.employeeId)
-      )
+      .sort((a: EmployeeEntity, b: EmployeeEntity) => b.id.localeCompare(a.id))
   }, [employees])
 
   useEffect(() => {

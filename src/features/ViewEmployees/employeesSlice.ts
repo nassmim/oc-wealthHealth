@@ -8,16 +8,14 @@ export interface Employee {
   startDate: string
   department: string
   birthdate: string
-  address: {
-    street: string
-    city: string
-    state: string
-    zipcode: string
-  }
+  street: string
+  city: string
+  state: string
+  zipcode: string
 }
 
 export interface EmployeeEntity extends FormData {
-  employeeId: string
+  id: string
 }
 
 const initialState: EmployeeEntity[] = []

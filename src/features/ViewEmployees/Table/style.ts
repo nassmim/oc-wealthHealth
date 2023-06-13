@@ -10,6 +10,7 @@ export const EmployeesTableStyled = styled.table`
     background-color: #fff;
     border-bottom: 3px solid #d6d2d2;
     font-weight: bold;
+    cursor: pointer;
 
     .title {
       display: flex;

@@ -159,29 +159,21 @@ const CreateEmployeeForm = () => {
                 <legend>Address</legend>
                 <FieldStyled>
                   <label htmlFor="street">Street</label>
-                  <input
-                    id="street"
-                    type="text"
-                    {...register('address.street')}
-                  />
-                  {errors.address?.street && (
-                    <span>{errors.address?.street?.message}</span>
-                  )}
+                  <input id="street" type="text" {...register('street')} />
+                  {errors.street && <span>{errors.street?.message}</span>}
                 </FieldStyled>
 
                 <FieldStyled>
                   <label htmlFor="city">City</label>
-                  <input id="city" type="text" {...register('address.city')} />
-                  {errors.address?.city && (
-                    <span>{errors.address?.city?.message}</span>
-                  )}
+                  <input id="city" type="text" {...register('city')} />
+                  {errors.city && <span>{errors.city?.message}</span>}
                 </FieldStyled>
 
                 <FieldStyled>
                   <label htmlFor="state">State</label>
                   <Controller
                     control={control}
-                    name="address.state"
+                    name="state"
                     render={({ field: { onChange } }) => (
                       <>
                         <SelectDropdown
@@ -191,9 +183,7 @@ const CreateEmployeeForm = () => {
                           placeholder="Select his state"
                           styles={selectDropdownStyles}
                         />
-                        {errors.address?.state && (
-                          <span>{errors.address?.state?.message}</span>
-                        )}
+                        {errors.state && <span>{errors.state?.message}</span>}
                       </>
                     )}
                   />
@@ -201,14 +191,8 @@ const CreateEmployeeForm = () => {
 
                 <FieldStyled>
                   <label htmlFor="zip-code">Zip Code</label>
-                  <input
-                    id="zip-code"
-                    type="text"
-                    {...register('address.zipcode')}
-                  />
-                  {errors.address?.zipcode && (
-                    <span>{errors.address?.zipcode?.message}</span>
-                  )}
+                  <input id="zip-code" type="text" {...register('zipcode')} />
+                  {errors.zipcode && <span>{errors.zipcode?.message}</span>}
                 </FieldStyled>
               </FieldsetStyled>
 
