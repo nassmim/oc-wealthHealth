@@ -23,8 +23,8 @@ const DisplayTable = ({
   initialSort,
   entriesNumberOptions,
   isSearchable = true,
+  fieldsSearched,
   searchLabel = 'Search',
-  searchOnChange,
   isPaginable = true,
 }: {
   data: EmployeeEntity[]
@@ -32,8 +32,8 @@ const DisplayTable = ({
   initialSort: { column: string; order: 'asc' | 'desc' }
   entriesNumberOptions: OptionValue[]
   isSearchable: boolean
+  fieldsSearched?: { column: string; fullWord: boolean }[]
   searchLabel: string
-  searchOnChange?: React.ChangeEventHandler<HTMLInputElement>
   isPaginable: boolean
 }) => {
   const usePreviousPersistent = (value: string): string => {
@@ -76,32 +76,48 @@ const DisplayTable = ({
 
   const [tableDataSorted, sortData] = useSortTable(tableData)
 
-  function searchEmployees() {
-    if (!searchValue.length) return tableData
+  const searchEmployees = () => {
+    console.log(tableDataSorted)
+    console.log(searchValue.length)
+    if (!searchValue.length) {
+      setTableData(tableDataSorted)
+      return
+    }
 
     let dataToSort = tableData
 
     if (searchValue.length <= previousSearchValue.length)
-      dataToSort = dataInitiallySorted
+      dataToSort = tableDataSorted
     const regexToMatch = new RegExp(`${searchValue}`, 'i')
 
-    const employeesFound = dataToSort.reduce(
+    const dataFound = dataToSort.reduce(
       (listOfItems: EmployeeEntity[], item: EmployeeEntity) => {
-        // Récupère et regroupe tous les ingrédients dans un seul string
-        Object.values(item).every((key) => {
-          if (key.match(regexToMatch)) {
+        const keepValue = (isMatched: boolean) => {
+          if (isMatched) {
             listOfItems.push(item)
             return false
           }
           return true
-        })
+        }
+
+        if (!fieldsSearched) {
+          Object.values(item).every((key) => {
+            return keepValue(key.match(regexToMatch))
+          })
+        } else {
+          Object.values(item).every((key) => {
+            return keepValue(
+              fieldsSearched.includes(key) && key.match(regexToMatch)
+            )
+          })
+        }
 
         return listOfItems
       },
       []
     )
 
-    setTableData(employeesFound)
+    setTableData(dataFound)
   }
 
   useEffect(() => {
@@ -128,10 +144,7 @@ const DisplayTable = ({
               name="search"
               id="search-employee"
               value={searchValue}
-              onChange={(e) => {
-                setSearchValue(e.target.value)
-                searchOnChange ? searchOnChange(e) : undefined
-              }}
+              onChange={(e) => setSearchValue(e.target.value)}
             />
           </SearchField>
         )}
