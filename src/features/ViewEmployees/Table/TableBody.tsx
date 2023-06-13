@@ -1,21 +1,19 @@
-import { useAppSelector } from '../../../app/hooks'
+import { EmployeeEntity } from '../employeesSlice'
 
-const TableBody = () => {
-  const employees = useAppSelector((state) => state.employees)
-  console.log(employees)
+const TableBody = ({ employees }: { employees: EmployeeEntity[] }) => {
   return (
     <tbody>
-      {employees.map((employee, index) => (
-        <tr key={employee.id + '-' + index}>
+      {employees.map((employee: EmployeeEntity, index: number) => (
+        <tr key={employee.employeeId + '-' + index}>
           <td>{employee.firstName}</td>
           <td>{employee.lastName}</td>
           <td>{employee.startDate}</td>
           <td>{employee.department}</td>
           <td>{employee.birthdate}</td>
-          <td>{employee.street}</td>
-          <td>{employee.city}</td>
-          <td>{employee.state}</td>
-          <td>{employee.zipcode}</td>
+          <td>{employee.address.street}</td>
+          <td>{employee.address.city}</td>
+          <td>{employee.address.state}</td>
+          <td>{employee.address.zipcode}</td>
         </tr>
       ))}
     </tbody>

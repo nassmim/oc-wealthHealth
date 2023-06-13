@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 
+import { useEffect, useMemo } from 'react'
+import { useGetEmployeesQuery } from '../api/apiEmployeesSlice'
+import { EmployeeEntity } from './employeesSlice'
+
 import {
   EntriesLengthChoice,
   SearchField,
@@ -38,7 +42,28 @@ const entriesNumberOptions: OptionValue[] = [
 ]
 
 const ViewEmployees = () => {
-  return (
+  const {
+    data: employees = [],
+    isSuccess,
+    isError,
+    isLoading,
+  } = useGetEmployeesQuery({})
+
+  const employeesSorted = useMemo(() => {
+    return employees
+      .slice()
+      .sort((a: EmployeeEntity, b: EmployeeEntity) =>
+        b.employeeId.localeCompare(a.employeeId)
+      )
+  }, [employees])
+
+  useEffect(() => {
+    if (isError) throw new Error()
+  }, [isError])
+
+  return isLoading ? (
+    <div>It's coming</div>
+  ) : (
     <Container>
       <MainContainer>
         <ButtonStyled>
@@ -79,8 +104,16 @@ const ViewEmployees = () => {
             </div>
           </TablePagination>
 
-          <div className="employees-table">
-            <EmployeesTable columns={columns} />
+          <div>
+            {employees.length ? (
+              <EmployeesTable employees={employeesSorted} columns={columns} />
+            ) : (
+              <p>
+                There is no employee in your company.
+                <br />
+                Please add them from the form
+              </p>
+            )}
           </div>
         </section>
       </MainContainer>

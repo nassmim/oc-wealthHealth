@@ -18,6 +18,7 @@ import { CSSObjectWithLabel } from 'react-select'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
+import { useAppDispatch } from '../../app/hooks.ts'
 
 const statesOptions: OptionValue[] = [
   { value: 'alamaba', label: 'Alamaba' },
@@ -53,15 +54,22 @@ const selectDropdownStyles = {
 }
 
 const CreateEmployeeForm = () => {
+  const dispatch = useAppDispatch()
+
   const {
     register,
     handleSubmit,
     trigger,
     control,
+    reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
 
-  const saveEmployee = (data: FormData) => console.log(data)
+  const saveEmployee = (data: FormData) => {
+    dispatch(employeeAdded(data))
+
+    reset()
+  }
 
   return (
     <>
