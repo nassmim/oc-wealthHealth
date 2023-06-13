@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { EmployeeEntity } from './employeesSlice'
 
 import {
@@ -19,6 +19,7 @@ import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
 
 const DisplayTable = ({
+  fetchData,
   data,
   columns,
   initialSort,
@@ -29,6 +30,7 @@ const DisplayTable = ({
   searchLabel = 'Search',
   isPaginable = true,
 }: {
+  fetchData: (fromIndex: number, toIndex: number) => Promise<void>
   data: EmployeeEntity[]
   columns: TableColumn[]
   initialSort: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
@@ -39,6 +41,20 @@ const DisplayTable = ({
   searchLabel: string
   isPaginable: boolean
 }) => {
+  const [entriesNumberChoice, setEntriesNumberChoice]: [
+    OptionValue,
+    React.Dispatch<React.SetStateAction<OptionValue>>
+  ] = useState(entriesNumberOptions[0])
+
+  const [pageNumber, setPageNumber]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>
+  ] = useState(1)
+
+  const handleEntriesNumberChange = (option: OptionValue) => {
+    setEntriesNumberChoice(option)
+  }
+
   const dataInitiallySorted = useMemo(() => {
     if (initialSort) {
       return data
@@ -55,12 +71,14 @@ const DisplayTable = ({
 
   const [tableData, setTableData] = useState(dataInitiallySorted)
 
-  const [tableDataSorted, sortData] = useSortTable(tableData)
-  const [tableDataFiltered, searchValue, setSearchValue] = useSearch({
-    data: tableDataSorted,
-    fieldsSearched,
-    searchOnFullWord,
-  })
+  const [tableDataSorted, setTableDataSorted, sortData] =
+    useSortTable(tableData)
+  const [tableDataFiltered, setTableDataFiltered, searchValue, setSearchValue] =
+    useSearch({
+      data: tableDataSorted,
+      fieldsSearched,
+      searchOnFullWord,
+    })
 
   useEffect(() => {
     setTableData(tableDataSorted)
@@ -70,12 +88,29 @@ const DisplayTable = ({
     setTableData(tableDataFiltered)
   }, [tableDataFiltered])
 
+  useEffect(() => {
+    const entriesNumber = Number(entriesNumberChoice.value)
+    const dataSlice = [
+      entriesNumber * (pageNumber - 1),
+      entriesNumber * pageNumber,
+    ]
+    fetchData(dataSlice[0], dataSlice[1])
+  }, [entriesNumberChoice, pageNumber])
+
+  useEffect(() => {
+    setTableDataSorted(data)
+    setTableDataFiltered(data)
+  }, [data])
+
   return (
     <>
       <TableDisplayOptions>
         <EntriesLengthChoice>
           <p>Show</p>
-          <EntriesNumberSelectDropdown options={entriesNumberOptions} />
+          <EntriesNumberSelectDropdown
+            onChange={handleEntriesNumberChange}
+            options={entriesNumberOptions}
+          />
           <p>entries</p>
         </EntriesLengthChoice>
         {isSearchable && (
@@ -100,12 +135,14 @@ const DisplayTable = ({
               alt="Previous page"
               width="20px"
               rotate="0deg"
+              onClick={() => setPageNumber(pageNumber - 1)}
             />
             <Arrow
               src={PaginateLeftArrow}
               alt="Previous page"
               width="20px"
               rotate="180deg"
+              onClick={() => setPageNumber(pageNumber + 1)}
             />
           </div>
         </TablePagination>

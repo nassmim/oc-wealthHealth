@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 
-import { useEffect } from 'react'
-import { useGetEmployeesQuery } from '../api/apiEmployeesSlice'
+import { useEffect, useState } from 'react'
+import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
 import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
@@ -23,19 +23,40 @@ const columns: TableColumn[] = [
 ]
 
 const entriesNumberOptions: OptionValue[] = [
-  { value: '1', label: '10' },
+  { value: '10', label: '10' },
   { value: '25', label: '25' },
   { value: '50', label: '50' },
   { value: '100', label: '100' },
 ]
 
 const ViewEmployees = () => {
-  const { data: employees = [], isError, isLoading } = useGetEmployeesQuery({})
+  const getEmployees = async (fromIndex: number, toIndex: number) => {
+    const employeesFetched = await getEmployeesTrigger(undefined, true)
+      .unwrap()
+      .catch((err) => {
+        throw new Error()
+      })
+
+    setEmployees(employeesFetched.slice(fromIndex, toIndex))
+  }
+  const [
+    getEmployeesTrigger,
+    { data: employeesUpdated = [], isError, isLoading, isSuccess },
+  ] = useLazyGetEmployeesQuery()
+  const [employees, setEmployees] = useState(employeesUpdated)
 
   useEffect(() => {
     if (isError) throw new Error()
   }, [isError])
+  useEffect(() => {
+    // console.log('useEffect employees')
+    // console.log(employees)
+  }, [employees])
 
+  useEffect(() => {
+    // console.log('useeffet is success')
+    // console.log(employees)
+  }, [isSuccess])
   return (
     <Container>
       <MainContainer>
@@ -48,6 +69,7 @@ const ViewEmployees = () => {
           <div>It's coming</div>
         ) : (
           <DisplayTable
+            fetchData={getEmployees}
             data={employees}
             columns={columns}
             initialSort={{ column: 'id', order: 'asc' }}

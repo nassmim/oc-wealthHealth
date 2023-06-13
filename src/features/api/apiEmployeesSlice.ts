@@ -9,5 +9,4 @@ export const apiEmployeesSlice = apiSlice.injectEndpoints({
   }),
 })
 
-export const { useGetEmployeesQuery, useAddEmployeeMutation } =
-  apiEmployeesSlice
+export const { useLazyGetEmployeesQuery } = apiEmployeesSlice

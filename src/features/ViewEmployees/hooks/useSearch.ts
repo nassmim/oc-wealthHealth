@@ -12,6 +12,7 @@ const useSearch = ({
   searchOnFullWord: boolean
 }): [
   EmployeeEntity[],
+  React.Dispatch<React.SetStateAction<EmployeeEntity[]>>,
   string,
   React.Dispatch<React.SetStateAction<string>>
 ] => {
@@ -67,7 +68,11 @@ const useSearch = ({
     filter()
   }, [searchValue])
 
-  return [tableData, searchValue, setSearchValue]
+  useEffect(() => {
+    setTableData(data)
+  }, [data])
+
+  return [tableData, setTableData, searchValue, setSearchValue]
 }
 
 export default useSearch

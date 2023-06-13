@@ -3,7 +3,11 @@ import { EmployeeEntity } from '../../employeesSlice'
 
 const useSortTable = (
   data: EmployeeEntity[]
-): [EmployeeEntity[], (sortingField: string, sortingOrder: string) => void] => {
+): [
+  EmployeeEntity[],
+  React.Dispatch<React.SetStateAction<EmployeeEntity[]>>,
+  (sortingField: string, sortingOrder: string) => void
+] => {
   const [tableData, setTableData] = useState(data)
 
   const sortData = (sortingField: string, sortingOrder: string): void => {
@@ -29,7 +33,8 @@ const useSortTable = (
 
     setTableData(dataSorted)
   }
-  return [tableData, sortData]
+
+  return [tableData, setTableData, sortData]
 }
 
 export default useSortTable
