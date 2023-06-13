@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { EmployeeEntity } from '../employeesSlice'
+import useCustomPrevious from './useCustomPrevious'
 
 const useSearch = ({
   data,
@@ -15,30 +16,8 @@ const useSearch = ({
   React.Dispatch<React.SetStateAction<string>>
 ] => {
   const [tableData, setTableData] = useState(data)
-
-  const usePreviousPersistent = (value: string): string => {
-    const ref: React.MutableRefObject<{
-      value: string
-      previousValue: string
-    }> = useRef({
-      value: value,
-      previousValue: '',
-    })
-
-    const current = ref.current.value
-
-    if (value !== current) {
-      ref.current = {
-        value: value,
-        previousValue: current,
-      }
-    }
-
-    return ref.current.previousValue
-  }
-
   const [searchValue, setSearchValue] = useState('')
-  const previousSearchValue = usePreviousPersistent(searchValue)
+  const previousSearchValue = useCustomPrevious(searchValue)
 
   const filter = () => {
     if (!searchValue.length) {
