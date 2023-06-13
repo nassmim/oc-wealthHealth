@@ -50,8 +50,10 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
+            initialSort={{ column: 'id', order: 'asc' }}
             entriesNumberOptions={entriesNumberOptions}
             isSearchable={true}
+            searchOnFullWord={false}
             searchLabel="Search"
             isPaginable={true}
           />

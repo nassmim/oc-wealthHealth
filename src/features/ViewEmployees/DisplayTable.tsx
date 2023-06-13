@@ -24,15 +24,17 @@ const DisplayTable = ({
   entriesNumberOptions,
   isSearchable = true,
   fieldsSearched,
+  searchOnFullWord = false,
   searchLabel = 'Search',
   isPaginable = true,
 }: {
   data: EmployeeEntity[]
   columns: TableColumn[]
-  initialSort: { column: string; order: 'asc' | 'desc' }
+  initialSort: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
   entriesNumberOptions: OptionValue[]
   isSearchable: boolean
-  fieldsSearched?: { column: string; fullWord: boolean }[]
+  fieldsSearched?: { column: string }[]
+  searchOnFullWord: boolean
   searchLabel: string
   isPaginable: boolean
 }) => {
@@ -64,8 +66,10 @@ const DisplayTable = ({
     if (initialSort) {
       return data
         .slice()
-        .sort((a: EmployeeEntity, b: EmployeeEntity) =>
-          b.id.localeCompare(a.id)
+        .sort(
+          (a: EmployeeEntity, b: EmployeeEntity) =>
+            b[initialSort.column].localeCompare(a[initialSort.column]) *
+            (initialSort.order === 'asc' ? 1 : -1)
         )
     } else {
       return data
@@ -77,8 +81,6 @@ const DisplayTable = ({
   const [tableDataSorted, sortData] = useSortTable(tableData)
 
   const searchEmployees = () => {
-    console.log(tableDataSorted)
-    console.log(searchValue.length)
     if (!searchValue.length) {
       setTableData(tableDataSorted)
       return
@@ -88,7 +90,10 @@ const DisplayTable = ({
 
     if (searchValue.length <= previousSearchValue.length)
       dataToSort = tableDataSorted
-    const regexToMatch = new RegExp(`${searchValue}`, 'i')
+
+    const regexToMatch = searchOnFullWord
+      ? new RegExp(`(\\s|^)${searchValue}`, 'i')
+      : new RegExp(`${searchValue}`, 'i')
 
     const dataFound = dataToSort.reduce(
       (listOfItems: EmployeeEntity[], item: EmployeeEntity) => {
