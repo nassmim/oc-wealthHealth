@@ -3,24 +3,12 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 
-import { useEffect, useMemo } from 'react'
+import { useEffect } from 'react'
 import { useGetEmployeesQuery } from '../api/apiEmployeesSlice'
-import { EmployeeEntity } from './employeesSlice'
 
-import {
-  EntriesLengthChoice,
-  SearchField,
-  TableDisplayOptions,
-  TablePagination,
-  Arrow,
-} from './style.ts'
-
-import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
-
-import EmployeesTable from './Table/Table.tsx'
 import type { TableColumn } from './types.tsx'
 import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
+import DisplayTable from './DisplayTable.tsx'
 
 const columns: TableColumn[] = [
   { label: 'First Name', accessor: 'firstName', sortable: true },
@@ -42,26 +30,13 @@ const entriesNumberOptions: OptionValue[] = [
 ]
 
 const ViewEmployees = () => {
-  const {
-    data: employees = [],
-    isSuccess,
-    isError,
-    isLoading,
-  } = useGetEmployeesQuery({})
-
-  const employeesSorted = useMemo(() => {
-    return employees
-      .slice()
-      .sort((a: EmployeeEntity, b: EmployeeEntity) => b.id.localeCompare(a.id))
-  }, [employees])
+  const { data: employees = [], isError, isLoading } = useGetEmployeesQuery({})
 
   useEffect(() => {
     if (isError) throw new Error()
   }, [isError])
 
-  return isLoading ? (
-    <div>It's coming</div>
-  ) : (
+  return (
     <Container>
       <MainContainer>
         <ButtonStyled>
@@ -69,51 +44,18 @@ const ViewEmployees = () => {
         </ButtonStyled>
 
         <Title>Current Employees</Title>
-
-        <section>
-          <TableDisplayOptions>
-            <EntriesLengthChoice>
-              <p>Show</p>
-              <EntriesNumberSelectDropdown options={entriesNumberOptions} />
-              <p>entries</p>
-            </EntriesLengthChoice>
-
-            <SearchField>
-              <p>Search</p>
-              <input type="search" name="search" id="search-employee" />
-            </SearchField>
-          </TableDisplayOptions>
-
-          <TablePagination>
-            <p>1 - 10 in 252</p>
-            <div className="arrows">
-              <Arrow
-                src={PaginateLeftArrow}
-                alt="Previous page"
-                width="20px"
-                rotate="0deg"
-              />
-              <Arrow
-                src={PaginateLeftArrow}
-                alt="Previous page"
-                width="20px"
-                rotate="180deg"
-              />
-            </div>
-          </TablePagination>
-
-          <div>
-            {employees.length ? (
-              <EmployeesTable employees={employeesSorted} columns={columns} />
-            ) : (
-              <p>
-                There is no employee in your company.
-                <br />
-                Please add them from the form
-              </p>
-            )}
-          </div>
-        </section>
+        {isLoading ? (
+          <div>It's coming</div>
+        ) : (
+          <DisplayTable
+            data={employees}
+            columns={columns}
+            entriesNumberOptions={entriesNumberOptions}
+            isSearchable={true}
+            searchLabel="Search"
+            isPaginable={true}
+          />
+        )}
       </MainContainer>
     </Container>
   )

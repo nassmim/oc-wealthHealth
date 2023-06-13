@@ -4,21 +4,20 @@ import TableHead from './TableHead.tsx'
 import TableBody from './TableBody.tsx'
 import type { TableColumn } from '../types.tsx'
 import { EmployeeEntity } from '../employeesSlice.ts'
-import useSortTable from './hooks/useSortTable.ts'
 
 const EmployeesTable = ({
+  data,
   columns,
-  employees,
+  sortData,
 }: {
+  data: EmployeeEntity[]
   columns: TableColumn[]
-  employees: EmployeeEntity[]
+  sortData: (sortingField: string, sortingOrder: string) => void
 }) => {
-  const [tableData, sortData] = useSortTable(employees)
-
   return (
     <EmployeesTableStyled>
       <TableHead columns={columns} sortData={sortData} />
-      <TableBody columns={columns} employees={tableData} />
+      <TableBody columns={columns} employees={data} />
     </EmployeesTableStyled>
   )
 }
