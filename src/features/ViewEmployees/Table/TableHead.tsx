@@ -34,7 +34,7 @@ const TableHead = ({
               <div className="arrows">
                 <Arrow
                   src={PaginateLeftArrow}
-                  alt="Sort descending"
+                  alt="Sort ascending"
                   width="10px"
                   rotate="90deg"
                   className={
@@ -47,7 +47,7 @@ const TableHead = ({
                 />
                 <Arrow
                   src={PaginateLeftArrow}
-                  alt="Sort ascending"
+                  alt="Sort descending"
                   width="10px"
                   rotate="-90deg"
                   className={
