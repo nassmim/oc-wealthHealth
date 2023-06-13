@@ -37,14 +37,26 @@ const TableHead = ({
                   alt="Sort descending"
                   width="10px"
                   rotate="90deg"
-                  className="sort-arrow"
+                  className={
+                    'sort-arrow' +
+                    ' ' +
+                    (!sortingOrder || sortingOrder === 'asc'
+                      ? 'visible'
+                      : 'hidden')
+                  }
                 />
                 <Arrow
                   src={PaginateLeftArrow}
                   alt="Sort ascending"
                   width="10px"
                   rotate="-90deg"
-                  className="sort-arrow"
+                  className={
+                    'sort-arrow' +
+                    ' ' +
+                    (!sortingOrder || sortingOrder === 'desc'
+                      ? 'visible'
+                      : 'hidden')
+                  }
                 />
               </div>
             </div>

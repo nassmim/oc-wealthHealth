@@ -29,6 +29,14 @@ export const EmployeesTableStyled = styled.table`
   .sort-arrow {
     background-repeat: no-repeat;
     background-position: center right;
+
+    &.visible {
+      visibility: visible;
+    }
+
+    &.hidden {
+      visibility: hidden;
+    }
   }
 
   td {
