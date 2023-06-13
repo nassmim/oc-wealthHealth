@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef } from 'react'
+import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { EmployeeEntity } from './employeesSlice'
 
 import {
@@ -7,6 +7,7 @@ import {
   TableDisplayOptions,
   TablePagination,
   Arrow,
+  NoData,
 } from './style.ts'
 
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
@@ -19,7 +20,6 @@ import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
 
 const DisplayTable = ({
-  fetchData,
   data,
   columns,
   initialSort,
@@ -30,7 +30,6 @@ const DisplayTable = ({
   searchLabel = 'Search',
   isPaginable = true,
 }: {
-  fetchData: (fromIndex: number, toIndex: number) => Promise<void>
   data: EmployeeEntity[]
   columns: TableColumn[]
   initialSort: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
@@ -41,6 +40,7 @@ const DisplayTable = ({
   searchLabel: string
   isPaginable: boolean
 }) => {
+  const dataSlice: React.MutableRefObject<number[]> = useRef([])
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
     React.Dispatch<React.SetStateAction<OptionValue>>
@@ -51,12 +51,13 @@ const DisplayTable = ({
     React.Dispatch<React.SetStateAction<number>>
   ] = useState(1)
 
-  const deriveDataSlice = (position: number): number[] => {
-    const dataSlice = [position * (pageNumber - 1), position * pageNumber]
-    return dataSlice
-  }
-
-  const dataSlice = useRef(deriveDataSlice(Number(entriesNumberChoice.value)))
+  const deriveDataSlice = useCallback(
+    (position: number): number[] => {
+      const dataSlice = [position * (pageNumber - 1), position * pageNumber]
+      return dataSlice
+    },
+    [pageNumber]
+  )
 
   const handleEntriesNumberChange = (option: OptionValue) => {
     setEntriesNumberChoice(option)
@@ -78,34 +79,36 @@ const DisplayTable = ({
 
   const [tableData, setTableData] = useState(dataInitiallySorted)
 
-  const [tableDataSorted, setTableDataSorted, sortData] =
-    useSortTable(tableData)
-  const [tableDataFiltered, setTableDataFiltered, searchValue, setSearchValue] =
-    useSearch({
-      data: tableDataSorted,
-      fieldsSearched,
-      searchOnFullWord,
-    })
+  const [tableDataSorted, sortData, hasBeenSorted] = useSortTable(tableData)
 
-  useEffect(() => {
-    setTableData(tableDataSorted)
-  }, [tableDataSorted])
-
-  useEffect(() => {
-    setTableData(tableDataFiltered)
-  }, [tableDataFiltered])
+  const [tableDataFiltered, searchValue, setSearchValue] = useSearch({
+    dataNotFiltered: hasBeenSorted ? tableDataSorted : dataInitiallySorted,
+    data: tableData,
+    fieldsSearched,
+    searchOnFullWord,
+  })
 
   useEffect(() => {
     const newDataSlice = deriveDataSlice(Number(entriesNumberChoice.value))
     dataSlice.current = newDataSlice
-    fetchData(newDataSlice[0], newDataSlice[1])
-  }, [entriesNumberChoice, pageNumber])
+    setTableData(dataInitiallySorted.slice(newDataSlice[0], newDataSlice[1]))
+  }, [
+    entriesNumberChoice,
+    pageNumber,
+    deriveDataSlice,
+    setTableData,
+    dataInitiallySorted,
+  ])
 
   useEffect(() => {
-    console.log(data.length)
-    setTableDataSorted(data)
-    setTableDataFiltered(data)
-  }, [data])
+    if (hasBeenSorted) setTableData(tableDataSorted)
+  }, [tableDataSorted, hasBeenSorted])
+
+  useEffect(() => {
+    setTableData(
+      tableDataFiltered.slice(dataSlice.current[0], dataSlice.current[1])
+    )
+  }, [searchValue, tableDataFiltered])
 
   return (
     <>
@@ -157,18 +160,17 @@ const DisplayTable = ({
         </TablePagination>
       )}
       <div>
-        {tableData.length ? (
-          <EmployeesTable
-            data={tableData}
-            columns={columns}
-            sortData={sortData}
-          />
-        ) : (
-          <p>
+        <EmployeesTable
+          data={tableData}
+          columns={columns}
+          sortData={sortData}
+        />
+        {!tableData.length && (
+          <NoData>
             {searchValue.length
               ? 'No results from your search'
               : 'There is no employee in your company. Please add them from the form'}
-          </p>
+          </NoData>
         )}
       </div>
     </>

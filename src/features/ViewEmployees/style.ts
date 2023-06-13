@@ -69,3 +69,14 @@ export const Arrow = styled.img.attrs((props) => ({
     `
   }}
 `
+
+export const NoData = styled.p`
+  ${(props) => {
+    return `
+      display: flex;
+      justify-content: center;
+      font-weight: bold;
+      margin-top: 20px;
+    `
+  }}
+`

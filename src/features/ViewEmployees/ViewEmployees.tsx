@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
@@ -30,33 +30,34 @@ const entriesNumberOptions: OptionValue[] = [
 ]
 
 const ViewEmployees = () => {
-  const getEmployees = async (fromIndex: number, toIndex: number) => {
-    const employeesFetched = await getEmployeesTrigger(undefined, true)
-      .unwrap()
-      .catch((err) => {
-        throw new Error()
-      })
-
-    setEmployees(employeesFetched.slice(fromIndex, toIndex))
-  }
   const [
     getEmployeesTrigger,
     { data: employeesUpdated = [], isError, isLoading, isSuccess },
   ] = useLazyGetEmployeesQuery()
   const [employees, setEmployees] = useState(employeesUpdated)
 
-  useEffect(() => {
-    if (isError) throw new Error()
-  }, [isError])
-  useEffect(() => {
-    // console.log('useEffect employees')
-    // console.log(employees)
-  }, [employees])
+  const getEmployees = useCallback(
+    async (fromIndex = 0, toIndex?: number) => {
+      const employeesFetched = await getEmployeesTrigger(undefined, true)
+        .unwrap()
+        .catch(() => {
+          throw new Error()
+        })
+
+      setEmployees(
+        employeesFetched.slice(
+          fromIndex,
+          toIndex ? toIndex : employeesFetched.length
+        )
+      )
+    },
+    [getEmployeesTrigger]
+  )
 
   useEffect(() => {
-    // console.log('useeffet is success')
-    // console.log(employees)
-  }, [isSuccess])
+    getEmployees()
+  }, [getEmployees])
+
   return (
     <Container>
       <MainContainer>
@@ -69,7 +70,6 @@ const ViewEmployees = () => {
           <div>It's coming</div>
         ) : (
           <DisplayTable
-            fetchData={getEmployees}
             data={employees}
             columns={columns}
             initialSort={{ column: 'id', order: 'asc' }}
