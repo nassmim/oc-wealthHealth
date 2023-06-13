@@ -16,6 +16,7 @@ import type { TableColumn } from './types.tsx'
 import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
+import useSearch from './hooks/useSearch.ts'
 
 const DisplayTable = ({
   data,
@@ -33,105 +34,41 @@ const DisplayTable = ({
   initialSort: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
   entriesNumberOptions: OptionValue[]
   isSearchable: boolean
-  fieldsSearched?: { column: string }[]
+  fieldsSearched?: [keyof EmployeeEntity][]
   searchOnFullWord: boolean
   searchLabel: string
   isPaginable: boolean
 }) => {
-  const usePreviousPersistent = (value: string): string => {
-    const ref: React.MutableRefObject<{
-      value: string
-      previousValue: string
-    }> = useRef({
-      value: value,
-      previousValue: '',
-    })
-
-    const current = ref.current.value
-
-    if (value !== current) {
-      ref.current = {
-        value: value,
-        previousValue: current,
-      }
-    }
-
-    return ref.current.previousValue
-  }
-
-  const [searchValue, setSearchValue] = useState('')
-  const previousSearchValue = usePreviousPersistent(searchValue)
-
   const dataInitiallySorted = useMemo(() => {
     if (initialSort) {
       return data
         .slice()
         .sort(
           (a: EmployeeEntity, b: EmployeeEntity) =>
-            b[initialSort.column].localeCompare(a[initialSort.column]) *
+            a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
     } else {
       return data
     }
-  }, [data])
+  }, [data, initialSort])
 
   const [tableData, setTableData] = useState(dataInitiallySorted)
 
   const [tableDataSorted, sortData] = useSortTable(tableData)
-
-  const searchEmployees = () => {
-    if (!searchValue.length) {
-      setTableData(tableDataSorted)
-      return
-    }
-
-    let dataToSort = tableData
-
-    if (searchValue.length <= previousSearchValue.length)
-      dataToSort = tableDataSorted
-
-    const regexToMatch = searchOnFullWord
-      ? new RegExp(`(\\s|^)${searchValue}`, 'i')
-      : new RegExp(`${searchValue}`, 'i')
-
-    const dataFound = dataToSort.reduce(
-      (listOfItems: EmployeeEntity[], item: EmployeeEntity) => {
-        const keepValue = (isMatched: boolean) => {
-          if (isMatched) {
-            listOfItems.push(item)
-            return false
-          }
-          return true
-        }
-
-        if (!fieldsSearched) {
-          Object.values(item).every((key) => {
-            return keepValue(key.match(regexToMatch))
-          })
-        } else {
-          Object.values(item).every((key) => {
-            return keepValue(
-              fieldsSearched.includes(key) && key.match(regexToMatch)
-            )
-          })
-        }
-
-        return listOfItems
-      },
-      []
-    )
-
-    setTableData(dataFound)
-  }
+  const [tableDataFiltered, searchValue, setSearchValue] = useSearch({
+    data: tableDataSorted,
+    fieldsSearched,
+    searchOnFullWord,
+  })
 
   useEffect(() => {
     setTableData(tableDataSorted)
   }, [tableDataSorted])
 
   useEffect(() => {
-    searchEmployees()
-  }, [searchValue])
+    setTableData(tableDataFiltered)
+  }, [tableDataFiltered])
 
   return (
     <>
