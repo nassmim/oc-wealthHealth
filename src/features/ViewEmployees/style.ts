@@ -64,7 +64,8 @@ export const Arrow = styled.img.attrs((props) => ({
     return `
       width: ${props.width};
       cursor: ${props.cursor};
-      transform: rotate(${props.rotate})
+      transform: rotate(${props.rotate});
+      opacity: ${props.opacity};
     `
   }}
 `

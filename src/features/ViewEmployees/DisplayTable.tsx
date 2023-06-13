@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { EmployeeEntity } from './employeesSlice'
 
 import {
@@ -51,6 +51,13 @@ const DisplayTable = ({
     React.Dispatch<React.SetStateAction<number>>
   ] = useState(1)
 
+  const deriveDataSlice = (position: number): number[] => {
+    const dataSlice = [position * (pageNumber - 1), position * pageNumber]
+    return dataSlice
+  }
+
+  const dataSlice = useRef(deriveDataSlice(Number(entriesNumberChoice.value)))
+
   const handleEntriesNumberChange = (option: OptionValue) => {
     setEntriesNumberChoice(option)
   }
@@ -89,15 +96,13 @@ const DisplayTable = ({
   }, [tableDataFiltered])
 
   useEffect(() => {
-    const entriesNumber = Number(entriesNumberChoice.value)
-    const dataSlice = [
-      entriesNumber * (pageNumber - 1),
-      entriesNumber * pageNumber,
-    ]
-    fetchData(dataSlice[0], dataSlice[1])
+    const newDataSlice = deriveDataSlice(Number(entriesNumberChoice.value))
+    dataSlice.current = newDataSlice
+    fetchData(newDataSlice[0], newDataSlice[1])
   }, [entriesNumberChoice, pageNumber])
 
   useEffect(() => {
+    console.log(data.length)
     setTableDataSorted(data)
     setTableDataFiltered(data)
   }, [data])
@@ -128,13 +133,16 @@ const DisplayTable = ({
       </TableDisplayOptions>
       {isPaginable && (
         <TablePagination>
-          <p>1 - 10 in 252</p>
+          <p>
+            {dataSlice.current[0] + 1} - {dataSlice.current[1]} in {data.length}
+          </p>
           <div className="arrows">
             <Arrow
               src={PaginateLeftArrow}
               alt="Previous page"
               width="20px"
               rotate="0deg"
+              cursor="pointer"
               onClick={() => setPageNumber(pageNumber - 1)}
             />
             <Arrow
@@ -142,6 +150,7 @@ const DisplayTable = ({
               alt="Previous page"
               width="20px"
               rotate="180deg"
+              cursor="pointer"
               onClick={() => setPageNumber(pageNumber + 1)}
             />
           </div>
