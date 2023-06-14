@@ -49,8 +49,18 @@ const DisplayTable = ({
 
   const dataSlice: React.MutableRefObject<number[]> = useRef([])
 
-  const [pagePreviousClickable, setPagePreviousClickable] = useState(false)
-  const [pageNextClickable, setPageNextClickable] = useState(true)
+  const [totalPagesNumber, setTotalPageNumber]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>
+  ] = useState(0)
+  const [pagePreviousClickable, setPagePreviousClickable]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState(false)
+  const [pageNextClickable, setPageNextClickable]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState(true)
 
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
@@ -102,10 +112,7 @@ const DisplayTable = ({
   })
 
   const handlePaginateNext = () => {
-    setPageNextClickable(
-      pageNumber <
-        Math.ceil(tableData.length / Number(entriesNumberChoice.value))
-    )
+    setPageNextClickable(pageNumber < totalPagesNumber)
   }
   const handlePaginatePrevious = () => {
     setPagePreviousClickable(pageNumber > 1)
@@ -160,12 +167,18 @@ const DisplayTable = ({
   }, [hasBeenFiltered, tableDataFiltered])
 
   useEffect(() => {
+    setTotalPageNumber(
+      Math.ceil(tableData.length / Number(entriesNumberChoice.value))
+    )
+  }, [entriesNumberChoice, tableData])
+
+  useEffect(() => {
     sliceData(tableData)
     if (entriesNumberChoice) {
       handlePaginateNext()
       handlePaginatePrevious()
     }
-  }, [pageNumber, entriesNumberChoice, tableData])
+  }, [totalPagesNumber, pageNumber])
 
   return (
     <>
@@ -195,8 +208,8 @@ const DisplayTable = ({
       {isPaginable && (
         <TablePagination>
           <p>
-            Page {pageNumber}: {dataSlice.current[0] + 1} -{' '}
-            {dataSlice.current[1]} in {tableData.length}
+            {dataSlice.current[0] + 1} - {dataSlice.current[1]} in{' '}
+            {tableData.length}
           </p>
           <div className="arrows">
             <Arrow
@@ -212,6 +225,19 @@ const DisplayTable = ({
                   : undefined
               }
             />
+            {[...Array(totalPagesNumber)].map((i, index) => (
+              <p
+                key={`${index}-${i}`}
+                className={
+                  'page-number' +
+                  ' ' +
+                  (pageNumber === index + 1 ? 'active' : '')
+                }
+                onClick={() => setPageNumber(index + 1)}
+              >
+                {index + 1}
+              </p>
+            ))}
             <Arrow
               src={PaginateLeftArrow}
               alt="Previous page"
