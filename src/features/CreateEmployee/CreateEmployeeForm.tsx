@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { FormData, formSchema } from './models/formData'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Container, MainContainer } from '../../shared/style.ts'
 import {
   SectionEmployeeForm,
   FormStyled,
+  FieldsStyled,
   FieldStyled,
   FieldsetStyled,
   DepartmentField,
@@ -62,15 +63,14 @@ const CreateEmployeeForm = () => {
     trigger,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
 
-  const saveEmployee = (data: FormData) => {
-    dispatch(employeeAdded(data))
-
-    reset()
+  const saveEmployee: SubmitHandler<FormData> = (data) => {
+    console.log(data)
   }
 
+  // console.log(isValid)
   return (
     <>
       <Container>
@@ -87,141 +87,147 @@ const CreateEmployeeForm = () => {
               id="create-employee"
               className="flex flex-col"
             >
-              <FieldStyled>
-                <label htmlFor="first-name">First Name</label>
-                <input type="text" id="first-name" {...register('firstName')} />
-                {errors.firstName && <span>{errors.firstName.message}</span>}
-              </FieldStyled>
-
-              <FieldStyled>
-                <label htmlFor="last-name">Last Name</label>
-                <input type="text" id="last-name" {...register('lastName')} />
-                {errors.lastName && <span>{errors.lastName.message}</span>}
-              </FieldStyled>
-
-              <FieldStyled>
-                <label htmlFor="birthdate">Date of Birth</label>
-                <Controller
-                  control={control}
-                  name="birthdate"
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <DatePickerCustom
-                        id="birthdate"
-                        wrapperClassName="datepicker"
-                        renderCustomHeader={renderCustomDatePickerHeader}
-                        calendarContainer={DatePickerCustomCalendar}
-                        todayButton="Today"
-                        isClearable
-                        showIcon
-                        fixedHeight
-                        onChange={onChange}
-                        selected={value}
-                      />
-                      {errors.birthdate && (
-                        <span>{errors.birthdate.message}</span>
-                      )}
-                    </>
-                  )}
-                />
-              </FieldStyled>
-
-              <FieldStyled>
-                <label htmlFor="start-date">Start Date</label>
-                <Controller
-                  control={control}
-                  name="startDate"
-                  render={({ field: { onChange, value } }) => (
-                    <>
-                      <DatePickerCustom
-                        id="start-date"
-                        wrapperClassName="datepicker"
-                        calendarContainer={DatePickerCustomCalendar}
-                        todayButton="Today"
-                        isClearable
-                        showIcon
-                        fixedHeight
-                        filterDate={(date: Date): boolean =>
-                          ![0, 6].includes(date.getDay())
-                        }
-                        onChange={onChange}
-                        selected={value}
-                      />
-                      {errors.startDate && (
-                        <span>{errors.startDate.message}</span>
-                      )}
-                    </>
-                  )}
-                />
-              </FieldStyled>
-
-              <FieldsetStyled>
-                <legend>Address</legend>
+              <FieldsStyled>
                 <FieldStyled>
-                  <label htmlFor="street">Street</label>
-                  <input id="street" type="text" {...register('street')} />
-                  {errors.street && <span>{errors.street?.message}</span>}
+                  <label htmlFor="first-name">First Name</label>
+                  <input
+                    type="text"
+                    id="first-name"
+                    {...register('firstName')}
+                  />
+                  {errors.firstName && <span>{errors.firstName.message}</span>}
                 </FieldStyled>
 
                 <FieldStyled>
-                  <label htmlFor="city">City</label>
-                  <input id="city" type="text" {...register('city')} />
-                  {errors.city && <span>{errors.city?.message}</span>}
+                  <label htmlFor="last-name">Last Name</label>
+                  <input type="text" id="last-name" {...register('lastName')} />
+                  {errors.lastName && <span>{errors.lastName.message}</span>}
                 </FieldStyled>
 
                 <FieldStyled>
-                  <label htmlFor="state">State</label>
+                  <label htmlFor="birthdate">Date of Birth</label>
                   <Controller
                     control={control}
-                    name="state"
-                    render={({ field: { onChange } }) => (
+                    name="birthdate"
+                    render={({ field: { onChange, value } }) => (
                       <>
-                        <SelectDropdown
-                          options={statesOptions}
-                          inputId="state"
+                        <DatePickerCustom
+                          id="birthdate"
+                          wrapperClassName="datepicker"
+                          renderCustomHeader={renderCustomDatePickerHeader}
+                          calendarContainer={DatePickerCustomCalendar}
+                          todayButton="Today"
+                          isClearable
+                          showIcon
+                          fixedHeight
                           onChange={onChange}
-                          placeholder="Select his state"
-                          styles={selectDropdownStyles}
+                          selected={value}
                         />
-                        {errors.state && <span>{errors.state?.message}</span>}
+                        {errors.birthdate && (
+                          <span>{errors.birthdate.message}</span>
+                        )}
                       </>
                     )}
                   />
                 </FieldStyled>
 
                 <FieldStyled>
-                  <label htmlFor="zip-code">Zip Code</label>
-                  <input id="zip-code" type="text" {...register('zipcode')} />
-                  {errors.zipcode && <span>{errors.zipcode?.message}</span>}
+                  <label htmlFor="start-date">Start Date</label>
+                  <Controller
+                    control={control}
+                    name="startDate"
+                    render={({ field: { onChange, value } }) => (
+                      <>
+                        <DatePickerCustom
+                          id="start-date"
+                          wrapperClassName="datepicker"
+                          calendarContainer={DatePickerCustomCalendar}
+                          todayButton="Today"
+                          isClearable
+                          showIcon
+                          fixedHeight
+                          filterDate={(date: Date): boolean =>
+                            ![0, 6].includes(date.getDay())
+                          }
+                          onChange={onChange}
+                          selected={value}
+                        />
+                        {errors.startDate && (
+                          <span>{errors.startDate.message}</span>
+                        )}
+                      </>
+                    )}
+                  />
                 </FieldStyled>
-              </FieldsetStyled>
 
-              <DepartmentField>
-                <label htmlFor="department">Department</label>
-                <Controller
-                  control={control}
-                  name="department"
-                  render={({ field: { onChange } }) => (
-                    <>
-                      <SelectDropdown
-                        options={companyDepartmentOptions}
-                        inputId="department"
-                        onChange={onChange}
-                        placeholder="Select his department"
-                        styles={selectDropdownStyles}
-                      />
-                      {errors.department && (
-                        <span>{errors.department.message}</span>
+                <FieldsetStyled>
+                  <legend>Address</legend>
+                  <FieldStyled>
+                    <label htmlFor="street">Street</label>
+                    <input id="street" type="text" {...register('street')} />
+                    {errors.street && <span>{errors.street?.message}</span>}
+                  </FieldStyled>
+
+                  <FieldStyled>
+                    <label htmlFor="city">City</label>
+                    <input id="city" type="text" {...register('city')} />
+                    {errors.city && <span>{errors.city?.message}</span>}
+                  </FieldStyled>
+
+                  <FieldStyled>
+                    <label htmlFor="state">State</label>
+                    <Controller
+                      control={control}
+                      name="state"
+                      render={({ field: { onChange } }) => (
+                        <>
+                          <SelectDropdown
+                            options={statesOptions}
+                            inputId="state"
+                            onChange={(option) => onChange(option?.label)}
+                            placeholder="Select his state"
+                            styles={selectDropdownStyles}
+                          />
+                          {errors.state && <span>{errors.state?.message}</span>}
+                        </>
                       )}
-                    </>
-                  )}
-                />
-              </DepartmentField>
+                    />
+                  </FieldStyled>
+
+                  <FieldStyled>
+                    <label htmlFor="zip-code">Zip Code</label>
+                    <input id="zip-code" type="text" {...register('zipcode')} />
+                    {errors.zipcode && <span>{errors.zipcode?.message}</span>}
+                  </FieldStyled>
+                </FieldsetStyled>
+
+                <DepartmentField>
+                  <label htmlFor="department">Department</label>
+                  <Controller
+                    control={control}
+                    name="department"
+                    render={({ field: { onChange } }) => (
+                      <>
+                        <SelectDropdown
+                          options={companyDepartmentOptions}
+                          inputId="department"
+                          onChange={(option) => onChange(option?.label)}
+                          placeholder="Select his department"
+                          styles={selectDropdownStyles}
+                        />
+                        {errors.department && (
+                          <span>{errors.department.message}</span>
+                        )}
+                      </>
+                    )}
+                  />
+                </DepartmentField>
+              </FieldsStyled>
+              <button className="submit-button" onClick={() => trigger()}>
+                Save
+              </button>
             </FormStyled>
 
-            <button className="submit-button" onClick={() => trigger()}>
-              Save
-            </button>
             <SuccessModal />
           </SectionEmployeeForm>
         </MainContainer>
