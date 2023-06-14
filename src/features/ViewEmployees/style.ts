@@ -47,11 +47,29 @@ export const TablePagination = styled.div`
   .arrows {
     display: flex;
     column-gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .page-number {
+      cursor: pointer;
+
+      &.active {
+        font-weight: bold;
+        padding: 5px 10px;
+        background: linear-gradient(to bottom, #fff 0%, #dcdcdc 100%);
+        border: 1px solid #979797;
+        cursor: default;
+      }
+    }
   }
 
   @media (max-width: 767px) {
     justify-content: center;
     margin-top: 20px;
+
+    .page-number {
+      display: none;
+    }
   }
 `
 
