@@ -40,7 +40,7 @@ const DisplayTable = ({
   searchLabel?: string
   isPaginable?: boolean
 }) => {
-  if (isPaginable && !entriesNumberOptions) {
+  if (isPaginable && !entriesNumberOptions.length) {
     alert(
       'entriesNumberOptions must be specified if you set isPaginable to true'
     )
@@ -65,8 +65,8 @@ const DisplayTable = ({
   const [hasBeenFiltered, setHasBeenFiltered] = useState(false)
 
   const deriveDataSlice = useCallback(
-    (position: number, page: number): number[] => {
-      const dataSlice = [position * (page - 1), position * page]
+    (numberOfEntries: number, page: number): number[] => {
+      const dataSlice = [numberOfEntries * (page - 1), numberOfEntries * page]
       return dataSlice
     },
     [pageNumber]
@@ -139,7 +139,7 @@ const DisplayTable = ({
     else page = offset ? offset : pageNumber
 
     const newDataSlice = deriveDataSlice(numberOfEntries, page)
-
+    newDataSlice[1] = Math.min(dataToSlice.length, newDataSlice[1])
     dataSlice.current = newDataSlice
     setTableDataSliced(dataToSlice.slice(newDataSlice[0], newDataSlice[1]))
   }
@@ -161,16 +161,16 @@ const DisplayTable = ({
 
   useEffect(() => {
     sliceData(tableData)
-    if (isPaginable) {
+    if (entriesNumberChoice) {
       handlePaginateNext()
       handlePaginatePrevious()
     }
-  }, [pageNumber, entriesNumberChoice])
+  }, [pageNumber, entriesNumberChoice, tableData])
 
   return (
     <>
       <TableDisplayOptions>
-        {entriesNumberOptions.length > 1 && (
+        {entriesNumberOptions.length >= 1 && (
           <EntriesLengthChoice>
             <p>Show</p>
             <EntriesNumberSelectDropdown
@@ -196,7 +196,7 @@ const DisplayTable = ({
         <TablePagination>
           <p>
             Page {pageNumber}: {dataSlice.current[0] + 1} -{' '}
-            {dataSlice.current[1]} in {data.length}
+            {dataSlice.current[1]} in {tableData.length}
           </p>
           <div className="arrows">
             <Arrow
