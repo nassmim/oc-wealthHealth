@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { EmployeeEntity } from './employeesSlice'
-import { SingleValue } from 'react-select'
+import { Employee } from './employeesSlice'
 import {
   EntriesLengthChoice,
   SearchField,
@@ -9,15 +8,19 @@ import {
   Arrow,
   NoData,
 } from './style.ts'
-import { OptionProps } from 'react-select'
+
+import Select, { OptionProps, ActionMeta } from 'react-select'
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 
 import EmployeesTable from './Table/Table.tsx'
 import type { TableColumn } from './types.tsx'
-import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
-import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
+
+type OptionValue = {
+  value: string
+  label: string
+}
 
 const DisplayTable = ({
   data,
@@ -33,19 +36,21 @@ const DisplayTable = ({
   isPaginable = false,
   pagesNumberVisible = false,
 }: {
-  data: EmployeeEntity[]
+  data: Employee[]
   columns: TableColumn[]
-  initialSort?: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
-  entriesNumberOptionsProps: OptionProps
+  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
+  entriesNumberOptionsProps: object
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof EmployeeEntity][]
+  fieldsSearched?: [keyof Employee][]
   searchOnFullWord?: boolean
   searchLabel?: string
   isPaginable?: boolean
   pagesNumberVisible?: boolean
 }) => {
+  const entriesNumberOptions = entriesNumberOptionsProps.options
+
   if (isPaginable && !entriesNumberOptions.length) {
     alert(
       'entriesNumberOptions must be specified if you set isPaginable to true'
@@ -67,23 +72,11 @@ const DisplayTable = ({
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>
   ] = useState(true)
-  const [totalPagesNumber, setTotalPageNumber]: [
-    number,
-    React.Dispatch<React.SetStateAction<number>>
-  ] = useState(0)
-  const [pagePreviousClickable, setPagePreviousClickable]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>
-  ] = useState(false)
-  const [pageNextClickable, setPageNextClickable]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>
-  ] = useState(true)
 
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
     React.Dispatch<React.SetStateAction<OptionValue>>
-  ] = useState(entriesNumberOptionsProps.options[0] as OptionValue)
+  ] = useState(entriesNumberOptions[0] as OptionValue)
 
   const [pageNumber, setPageNumber]: [
     number,
@@ -100,8 +93,11 @@ const DisplayTable = ({
     [pageNumber]
   )
 
-  const handleEntriesNumberChange = (option: SingleValue<OptionValue>) => {
-    if (option) setEntriesNumberChoice(option)
+  const handleEntriesNumberChange = (
+    newValue: unknown,
+    actionMeta: ActionMeta<unknown>
+  ) => {
+    if (newValue) setEntriesNumberChoice(newValue as OptionValue)
   }
 
   const dataInitiallySorted = useMemo(() => {
@@ -109,7 +105,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: EmployeeEntity, b: EmployeeEntity) =>
+          (a: Employee, b: Employee) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -145,7 +141,7 @@ const DisplayTable = ({
 
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: EmployeeEntity[]
+    dataToUse: Employee[]
   ) => {
     if (valueToBeTrue) {
       setTableData(dataToUse)
@@ -155,7 +151,7 @@ const DisplayTable = ({
     }
   }
 
-  const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
+  const sliceData = (dataToSlice: Employee[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
@@ -176,12 +172,10 @@ const DisplayTable = ({
   }, [dataInitiallySorted])
 
   useEffect(() => {
-    setTableData(tableDataSorted)
     setAndSliceTableData(hasBeenSorted, tableDataSorted)
   }, [hasBeenSorted, tableDataSorted])
 
   useEffect(() => {
-    setTableData(tableDataFiltered)
     setAndSliceTableData(hasBeenFiltered, tableDataFiltered)
   }, [hasBeenFiltered, tableDataFiltered])
 
@@ -204,7 +198,6 @@ const DisplayTable = ({
       handlePaginatePrevious()
     }
   }, [totalPagesNumber, pageNumber])
-  }, [totalPagesNumber, pageNumber])
 
   return (
     <>
@@ -212,7 +205,10 @@ const DisplayTable = ({
         {entriesNumberOptions.length >= 1 && (
           <EntriesLengthChoice>
             <p>{showEntriesNumberText}</p>
-            <SelectDropdown {...entriesNumberOptionsProps} />
+            <Select
+              onChange={handleEntriesNumberChange}
+              {...entriesNumberOptionsProps}
+            />
             <p>{entriesUnits}</p>
           </EntriesLengthChoice>
         )}
@@ -231,8 +227,6 @@ const DisplayTable = ({
       {isPaginable && (
         <TablePagination>
           <p>
-            {dataSlice.current[0] + 1} - {dataSlice.current[1]} in{' '}
-            {tableData.length}
             {dataSlice.current[0] + 1} - {dataSlice.current[1]} in{' '}
             {tableData.length}
           </p>

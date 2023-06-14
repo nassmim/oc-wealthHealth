@@ -66,7 +66,6 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     let showTable = 1
-    console.log(isLoading)
     if (isLoading) {
       showTable = setTimeout(() => setTableIsVisible(true), 2000)
     } else setTableIsVisible(true)
@@ -96,7 +95,7 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
-            initialSort={{ column: 'id', order: 'asc' }}
+            // initialSort={{ column: 'firstName', order: 'asc' }}
             entriesNumberOptionsProps={
               entriesNumberOptionsProps.selectNativeProps
             }

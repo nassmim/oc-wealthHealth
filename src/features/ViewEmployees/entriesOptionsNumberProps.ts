@@ -9,6 +9,8 @@ const entriesNumberOptions: OptionValue[] = [
 ]
 
 const entriesNumberOptionsProps = {
+  showEntriesNumberText: 'Show',
+  entriesUnits: 'entries',
   selectNativeProps: {
     options: entriesNumberOptions,
     inputId: 'table-entries-length',
@@ -48,8 +50,6 @@ const entriesNumberOptionsProps = {
       }),
     },
   },
-  showEntriesNumberText: 'Show',
-  entriesUnits: 'entries',
 }
 
 export default entriesNumberOptionsProps
