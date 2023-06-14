@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { Employee } from './employeesSlice'
+import { EmployeeEntity } from './employeesSlice'
 import { SingleValue } from 'react-select'
 import {
   EntriesLengthChoice,
@@ -9,36 +9,42 @@ import {
   Arrow,
   NoData,
 } from './style.ts'
-
+import { OptionProps } from 'react-select'
 import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 
 import EmployeesTable from './Table/Table.tsx'
 import type { TableColumn } from './types.tsx'
 import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
+import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 
 const DisplayTable = ({
   data,
   columns,
   initialSort,
-  entriesNumberOptions = [],
+  entriesNumberOptionsProps,
+  showEntriesNumberText = '',
+  entriesUnits = '',
   isSearchable = false,
   fieldsSearched = [],
   searchOnFullWord = false,
   searchLabel = 'Search',
   isPaginable = false,
+  pagesNumberVisible = false,
 }: {
-  data: Employee[]
+  data: EmployeeEntity[]
   columns: TableColumn[]
-  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
-  entriesNumberOptions?: OptionValue[]
+  initialSort?: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
+  entriesNumberOptionsProps: OptionProps
+  showEntriesNumberText?: string
+  entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof Employee][]
+  fieldsSearched?: [keyof EmployeeEntity][]
   searchOnFullWord?: boolean
   searchLabel?: string
   isPaginable?: boolean
+  pagesNumberVisible?: boolean
 }) => {
   if (isPaginable && !entriesNumberOptions.length) {
     alert(
@@ -49,13 +55,23 @@ const DisplayTable = ({
 
   const dataSlice: React.MutableRefObject<number[]> = useRef([])
 
-  const [pagePreviousClickable, setPagePreviousClickable] = useState(false)
-  const [pageNextClickable, setPageNextClickable] = useState(true)
+  const [totalPagesNumber, setTotalPageNumber]: [
+    number,
+    React.Dispatch<React.SetStateAction<number>>
+  ] = useState(0)
+  const [pagePreviousClickable, setPagePreviousClickable]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState(false)
+  const [pageNextClickable, setPageNextClickable]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>
+  ] = useState(true)
 
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
     React.Dispatch<React.SetStateAction<OptionValue>>
-  ] = useState(entriesNumberOptions[0])
+  ] = useState(entriesNumberOptionsProps.options[0] as OptionValue)
 
   const [pageNumber, setPageNumber]: [
     number,
@@ -81,7 +97,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: Employee, b: Employee) =>
+          (a: EmployeeEntity, b: EmployeeEntity) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -102,10 +118,7 @@ const DisplayTable = ({
   })
 
   const handlePaginateNext = () => {
-    setPageNextClickable(
-      pageNumber <
-        Math.ceil(tableData.length / Number(entriesNumberChoice.value))
-    )
+    setPageNextClickable(pageNumber < totalPagesNumber)
   }
   const handlePaginatePrevious = () => {
     setPagePreviousClickable(pageNumber > 1)
@@ -119,7 +132,7 @@ const DisplayTable = ({
 
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: Employee[]
+    dataToUse: EmployeeEntity[]
   ) => {
     if (valueToBeTrue) {
       setTableData(dataToUse)
@@ -129,7 +142,7 @@ const DisplayTable = ({
     }
   }
 
-  const sliceData = (dataToSlice: Employee[], offset?: number) => {
+  const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
@@ -160,24 +173,27 @@ const DisplayTable = ({
   }, [hasBeenFiltered, tableDataFiltered])
 
   useEffect(() => {
+    setTotalPageNumber(
+      Math.ceil(tableData.length / Number(entriesNumberChoice.value))
+    )
+  }, [entriesNumberChoice, tableData])
+
+  useEffect(() => {
     sliceData(tableData)
     if (entriesNumberChoice) {
       handlePaginateNext()
       handlePaginatePrevious()
     }
-  }, [pageNumber, entriesNumberChoice, tableData])
+  }, [totalPagesNumber, pageNumber])
 
   return (
     <>
       <TableDisplayOptions>
         {entriesNumberOptions.length >= 1 && (
           <EntriesLengthChoice>
-            <p>Show</p>
-            <EntriesNumberSelectDropdown
-              onChange={handleEntriesNumberChange}
-              options={entriesNumberOptions}
-            />
-            <p>entries</p>
+            <p>{showEntriesNumberText}</p>
+            <SelectDropdown {...entriesNumberOptionsProps} />
+            <p>{entriesUnits}</p>
           </EntriesLengthChoice>
         )}
         {isSearchable && (
@@ -195,8 +211,8 @@ const DisplayTable = ({
       {isPaginable && (
         <TablePagination>
           <p>
-            Page {pageNumber}: {dataSlice.current[0] + 1} -{' '}
-            {dataSlice.current[1]} in {tableData.length}
+            {dataSlice.current[0] + 1} - {dataSlice.current[1]} in{' '}
+            {tableData.length}
           </p>
           <div className="arrows">
             <Arrow
@@ -212,6 +228,20 @@ const DisplayTable = ({
                   : undefined
               }
             />
+            {pagesNumberVisible &&
+              [...Array(totalPagesNumber)].map((i, index) => (
+                <p
+                  key={`${index}-${i}`}
+                  className={
+                    'page-number' +
+                    ' ' +
+                    (pageNumber === index + 1 ? 'active' : '')
+                  }
+                  onClick={() => setPageNumber(index + 1)}
+                >
+                  {index + 1}
+                </p>
+              ))}
             <Arrow
               src={PaginateLeftArrow}
               alt="Previous page"
