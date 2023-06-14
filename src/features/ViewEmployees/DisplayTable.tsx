@@ -51,9 +51,15 @@ const DisplayTable = ({
     React.Dispatch<React.SetStateAction<number>>
   ] = useState(1)
 
+  const [hasBeenFiltered, setHasBeenFiltered] = useState(false)
+
   const deriveDataSlice = useCallback(
-    (position: number): number[] => {
-      const dataSlice = [position * (pageNumber - 1), position * pageNumber]
+    (position: number, offset?: number): number[] => {
+      const finalPageNumber = offset ? offset : pageNumber
+      const dataSlice = [
+        position * (finalPageNumber - 1),
+        position * finalPageNumber,
+      ]
       return dataSlice
     },
     [pageNumber]
@@ -78,37 +84,61 @@ const DisplayTable = ({
   }, [data, initialSort])
 
   const [tableData, setTableData] = useState(dataInitiallySorted)
+  const [tableDataSliced, setTableDataSliced] = useState(tableData)
 
-  const [tableDataSorted, sortData, hasBeenSorted] = useSortTable(tableData)
+  const [tableDataSorted, sortData, hasBeenSorted] = useSortTable(data)
 
-  const [tableDataFiltered, searchValue, setSearchValue] = useSearch({
-    dataNotFiltered: hasBeenSorted ? tableDataSorted : dataInitiallySorted,
-    data: tableData,
+  const [tableDataFiltered, filter] = useSearch({
+    data: hasBeenSorted ? tableDataSorted : dataInitiallySorted,
     fieldsSearched,
     searchOnFullWord,
   })
 
-  useEffect(() => {
-    const newDataSlice = deriveDataSlice(Number(entriesNumberChoice.value))
-    dataSlice.current = newDataSlice
-    setTableData(dataInitiallySorted.slice(newDataSlice[0], newDataSlice[1]))
-  }, [
-    entriesNumberChoice,
-    pageNumber,
-    deriveDataSlice,
-    setTableData,
-    dataInitiallySorted,
-  ])
+  const handleSearch = (e) => {
+    const value = e.target.value
+    setHasBeenFiltered(true)
+    filter(value)
+  }
 
-  useEffect(() => {
-    if (hasBeenSorted) setTableData(tableDataSorted)
-  }, [tableDataSorted, hasBeenSorted])
+  const setAndSliceTableData = (
+    valueToBeTrue: boolean,
+    dataToUse: EmployeeEntity[]
+  ) => {
+    if (valueToBeTrue) {
+      setTableData(dataToUse)
+      const offset = 1
+      setPageNumber(offset)
+      sliceData(dataToUse, offset)
+    }
+  }
 
-  useEffect(() => {
-    setTableData(
-      tableDataFiltered.slice(dataSlice.current[0], dataSlice.current[1])
+  const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
+    const newDataSlice = deriveDataSlice(
+      Number(entriesNumberChoice.value),
+      offset
     )
-  }, [searchValue, tableDataFiltered])
+    dataSlice.current = newDataSlice
+    setTableDataSliced(dataToSlice.slice(newDataSlice[0], newDataSlice[1]))
+  }
+
+  useEffect(() => {
+    setTableData(dataInitiallySorted)
+    sliceData(dataInitiallySorted)
+  }, [dataInitiallySorted])
+
+  useEffect(() => {
+    setTableData(tableDataSorted)
+    setAndSliceTableData(hasBeenSorted, tableDataSorted)
+  }, [hasBeenSorted, tableDataSorted])
+
+  useEffect(() => {
+    setTableData(tableDataFiltered)
+    setAndSliceTableData(hasBeenFiltered, tableDataFiltered)
+  }, [hasBeenFiltered, tableDataFiltered])
+
+  useEffect(() => {
+    sliceData(tableData)
+  }, [pageNumber, entriesNumberChoice.value])
 
   return (
     <>
@@ -128,8 +158,7 @@ const DisplayTable = ({
               type="search"
               name="search"
               id="search-employee"
-              value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={handleSearch}
             />
           </SearchField>
         )}
@@ -161,13 +190,13 @@ const DisplayTable = ({
       )}
       <div>
         <EmployeesTable
-          data={tableData}
+          data={tableDataSliced}
           columns={columns}
           sortData={sortData}
         />
         {!tableData.length && (
           <NoData>
-            {searchValue.length
+            {hasBeenFiltered
               ? 'No results from your search'
               : 'There is no employee in your company. Please add them from the form'}
           </NoData>

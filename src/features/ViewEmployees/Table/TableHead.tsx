@@ -12,7 +12,7 @@ const TableHead = ({
 }) => {
   const [sortingField, setSortingField] = useState('')
   const [sortingOrder, setSortingOrder] = useState('')
-  console.log(sortingOrder)
+
   const handleSorting = (accessor: string) => {
     const newSortingOrder =
       accessor === sortingField && sortingOrder === 'asc' ? 'desc' : 'asc'

@@ -1,42 +1,28 @@
 import { useState, useEffect, useCallback } from 'react'
 import { EmployeeEntity } from '../employeesSlice'
-import useCustomPrevious from './useCustomPrevious'
 
 const useSearch = ({
-  dataNotFiltered = [],
   data = [],
   fieldsSearched,
   searchOnFullWord,
 }: {
-  dataNotFiltered: EmployeeEntity[]
   data: EmployeeEntity[]
   fieldsSearched?: [keyof EmployeeEntity][]
   searchOnFullWord: boolean
-}): [
-  EmployeeEntity[],
-  string,
-  React.Dispatch<React.SetStateAction<string>>
-] => {
+}): [EmployeeEntity[], (value: string) => void] => {
   const [tableData, setTableData] = useState(data)
-  const [searchValue, setSearchValue] = useState('')
-  const previousSearchValue = useCustomPrevious(searchValue)
 
-  const filter = useCallback(() => {
-    if (!searchValue.length) {
-      setTableData(dataNotFiltered)
+  const filter = (value: string) => {
+    if (!value.length) {
+      setTableData(data)
       return
     }
 
-    let dataToFilter = tableData
-
-    if (searchValue.length <= previousSearchValue.length)
-      dataToFilter = dataNotFiltered
-
     const regexToMatch = searchOnFullWord
-      ? new RegExp(`(\\s|^)${searchValue}`, 'i')
-      : new RegExp(`${searchValue}`, 'i')
+      ? new RegExp(`(\\s|^)${value}`, 'i')
+      : new RegExp(`${value}`, 'i')
 
-    const dataFound = dataToFilter.reduce(
+    const dataFound = data.reduce(
       (listOfItems: EmployeeEntity[], item: EmployeeEntity) => {
         const keepValue = (isMatched: boolean) => {
           if (isMatched) {
@@ -64,13 +50,9 @@ const useSearch = ({
     )
 
     setTableData(dataFound)
-  }, [searchValue])
+  }
 
-  useEffect(() => {
-    filter()
-  }, [filter])
-
-  return [tableData, searchValue, setSearchValue]
+  return [tableData, filter]
 }
 
 export default useSearch
