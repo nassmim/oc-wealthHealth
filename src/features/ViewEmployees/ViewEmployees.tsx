@@ -4,12 +4,14 @@ import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 import PulseLoader from 'react-spinners/PulseLoader'
 
-import { useCallback, useEffect, useState, CSSProperties } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
 import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import DisplayTable from './DisplayTable.tsx'
+import { useAppDispatch, useAppSelector } from '../../app/hooks.ts'
+import { employeesFetched } from './employeesSlice.ts'
 
 const columns: TableColumn[] = [
   { label: 'First Name', accessor: 'firstName', sortable: true },
@@ -30,13 +32,13 @@ const entriesNumberOptions: OptionValue[] = [
   { value: '100', label: '100' },
 ]
 
-const LoadingStyles: CSSProperties = {
-  display: 'block',
-  margin: '0 auto',
-  borderColor: 'red',
-}
-
 const ViewEmployees = () => {
+  const dispatch = useAppDispatch()
+
+  const hasBeenFetched = useAppSelector(
+    (state) => state.employees.hasBeenFetched
+  )
+
   const [tableIsVisible, setTableIsVisible] = useState(false)
 
   const [
@@ -47,18 +49,20 @@ const ViewEmployees = () => {
 
   const getEmployees = useCallback(
     async (fromIndex = 0, toIndex?: number) => {
-      const employeesFetched = await getEmployeesTrigger(undefined, true)
+      const employeesListFetched = await getEmployeesTrigger(undefined, true)
         .unwrap()
         .catch(() => {
           throw new Error()
         })
 
       setEmployees(
-        employeesFetched.slice(
+        employeesListFetched.slice(
           fromIndex,
-          toIndex ? toIndex : employeesFetched.length
+          toIndex ? toIndex : employeesListFetched.length
         )
       )
+
+      dispatch(employeesFetched())
     },
     [getEmployeesTrigger]
   )
@@ -68,10 +72,15 @@ const ViewEmployees = () => {
   }, [getEmployees])
 
   useEffect(() => {
-    if (isLoading)
-      setTimeout(() => {
-        setTableIsVisible(true)
-      }, 2000)
+    let showTable = 1
+    console.log(isLoading)
+    if (isLoading) {
+      showTable = setTimeout(() => setTableIsVisible(true), 2000)
+    } else setTableIsVisible(true)
+
+    return () => {
+      clearTimeout(showTable)
+    }
   }, [isLoading])
 
   return (
@@ -82,7 +91,7 @@ const ViewEmployees = () => {
         </ButtonStyled>
 
         <Title>Current Employees</Title>
-        {!tableIsVisible ? (
+        {!hasBeenFetched && !tableIsVisible ? (
           <PulseLoader
             cssOverride={{
               position: 'absolute',

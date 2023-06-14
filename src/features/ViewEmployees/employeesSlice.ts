@@ -18,16 +18,28 @@ export interface EmployeeEntity extends FormData {
   id: string
 }
 
-const initialState: EmployeeEntity[] = []
+const initialState: {
+  employees: EmployeeEntity[]
+  hasBeenFetched: boolean
+} = {
+  employees: [],
+  hasBeenFetched: false,
+}
 
 const employeesSlice = createSlice({
   name: 'employees',
   initialState,
-  reducers: {},
+  reducers: {
+    employeesFetched: (state) => {
+      state.hasBeenFetched = true
+    },
+  },
 })
 
 const employeesReducer = employeesSlice.reducer
 
 export const selectEmployees = (state: RootState) => state.employees
+
+export const { employeesFetched } = employeesSlice.actions
 
 export default employeesReducer
