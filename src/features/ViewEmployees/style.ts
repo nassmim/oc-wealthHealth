@@ -5,6 +5,7 @@ export const EmployeesSection = styled.section``
 export const TableDisplayOptions = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 20px;
 
   @media (max-width: 767px) {
     flex-direction: column;
@@ -41,7 +42,7 @@ export const TablePagination = styled.div`
   justify-content: flex-end;
   align-items: center;
   column-gap: 5%;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 
   .arrows {
     display: flex;
@@ -54,68 +55,6 @@ export const TablePagination = styled.div`
   }
 `
 
-export const EmployeesTable = styled.table`
-  width: 100%;
-  background-color: #fff;
-
-  border-spacing: 0 0;
-
-  th {
-    background-color: #fff;
-    border-bottom: 3px solid #d6d2d2;
-    font-weight: bold;
-
-    .title {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      column-gap: 10px;
-    }
-
-    .arrows {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-  }
-
-  .sort-arrow {
-    background-repeat: no-repeat;
-    background-position: center right;
-  }
-
-  td {
-    text-align: center;
-    border-top: 1px solid #d6d2d2;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  tr:first-child td {
-    border-top: none;
-  }
-
-  tbody tr:nth-child(n) td {
-    background: #fff;
-  }
-
-  tbody tr:nth-child(2n) td {
-    background: #e2ffa6;
-  }
-
-  @media (max-width: 767px) {
-    font-size: 9px;
-
-    .title {
-      flex-direction: column;
-
-      .arrows {
-        flex-direction: row;
-      }
-    }
-  }
-`
-
 export const Arrow = styled.img.attrs((props) => ({
   src: props.src,
   alt: props.alt,
@@ -125,7 +64,19 @@ export const Arrow = styled.img.attrs((props) => ({
     return `
       width: ${props.width};
       cursor: ${props.cursor};
-      transform: rotate(${props.rotate})
+      transform: rotate(${props.rotate});
+      opacity: ${props.opacity};
+    `
+  }}
+`
+
+export const NoData = styled.p`
+  ${(props) => {
+    return `
+      display: flex;
+      justify-content: center;
+      font-weight: bold;
+      margin-top: 20px;
     `
   }}
 `
