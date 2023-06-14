@@ -2,8 +2,9 @@ import { Container, MainContainer } from '../../shared/style.ts'
 import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
+import PulseLoader from 'react-spinners/PulseLoader'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, CSSProperties } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
@@ -29,7 +30,15 @@ const entriesNumberOptions: OptionValue[] = [
   { value: '100', label: '100' },
 ]
 
+const LoadingStyles: CSSProperties = {
+  display: 'block',
+  margin: '0 auto',
+  borderColor: 'red',
+}
+
 const ViewEmployees = () => {
+  const [tableIsVisible, setTableIsVisible] = useState(false)
+
   const [
     getEmployeesTrigger,
     { data: employeesUpdated = [], isError, isLoading, isSuccess },
@@ -58,6 +67,13 @@ const ViewEmployees = () => {
     getEmployees()
   }, [getEmployees])
 
+  useEffect(() => {
+    if (isLoading)
+      setTimeout(() => {
+        setTableIsVisible(true)
+      }, 2000)
+  }, [isLoading])
+
   return (
     <Container>
       <MainContainer>
@@ -66,8 +82,14 @@ const ViewEmployees = () => {
         </ButtonStyled>
 
         <Title>Current Employees</Title>
-        {isLoading ? (
-          <div>It's coming</div>
+        {!tableIsVisible ? (
+          <PulseLoader
+            cssOverride={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+            }}
+          />
         ) : (
           <DisplayTable
             data={employees}

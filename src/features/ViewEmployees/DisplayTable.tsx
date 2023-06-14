@@ -24,11 +24,11 @@ const DisplayTable = ({
   columns,
   initialSort,
   entriesNumberOptions = [],
-  isSearchable = true,
+  isSearchable = false,
   fieldsSearched = [],
   searchOnFullWord = false,
   searchLabel = 'Search',
-  isPaginable = true,
+  isPaginable = false,
 }: {
   data: EmployeeEntity[]
   columns: TableColumn[]
