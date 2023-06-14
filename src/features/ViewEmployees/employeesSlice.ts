@@ -14,12 +14,8 @@ export interface Employee {
   zipcode: string
 }
 
-export interface EmployeeEntity extends FormData {
-  id: string
-}
-
 const initialState: {
-  employees: EmployeeEntity[]
+  employees: Employee[]
   hasBeenFetched: boolean
 } = {
   employees: [],

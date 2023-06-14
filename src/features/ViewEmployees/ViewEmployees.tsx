@@ -73,7 +73,6 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     let showTable = 1
-    console.log(isLoading)
     if (isLoading) {
       showTable = setTimeout(() => setTableIsVisible(true), 2000)
     } else setTableIsVisible(true)

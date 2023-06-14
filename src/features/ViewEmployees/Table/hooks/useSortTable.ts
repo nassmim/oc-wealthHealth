@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react'
-import { EmployeeEntity } from '../../employeesSlice'
+import { useState } from 'react'
+import { Employee } from '../../employeesSlice'
 
 const useSortTable = (
-  data: EmployeeEntity[] = []
+  data: Employee[] = []
 ): [
-  EmployeeEntity[],
+  Employee[],
   (sortingField: string, sortingOrder: string) => void,
   boolean
 ] => {
@@ -14,19 +14,15 @@ const useSortTable = (
   const sortData = (sortingField: string, sortingOrder: string): void => {
     const dataSorted = [...data].sort((a, b): number => {
       let result: number
-      if (a[sortingField as keyof EmployeeEntity] === null) result = 1
-      else if (b[sortingField as keyof EmployeeEntity] === null) result = -1
+      if (a[sortingField as keyof Employee] === null) result = 1
+      else if (b[sortingField as keyof Employee] === null) result = -1
       else {
         result =
-          a[sortingField as keyof EmployeeEntity]
+          a[sortingField as keyof Employee]
             .toString()
-            .localeCompare(
-              b[sortingField as keyof EmployeeEntity].toString(),
-              'en',
-              {
-                numeric: true,
-              }
-            ) * (sortingOrder === 'asc' ? 1 : -1)
+            .localeCompare(b[sortingField as keyof Employee].toString(), 'en', {
+              numeric: true,
+            }) * (sortingOrder === 'asc' ? 1 : -1)
       }
 
       return result

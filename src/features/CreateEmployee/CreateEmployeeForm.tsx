@@ -3,6 +3,7 @@ import { FormData, formSchema } from './models/formData'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Container, MainContainer } from '../../shared/style.ts'
+import { useAddEmployeeMutation } from '../api/apiEmployeesSlice.ts'
 import {
   SectionEmployeeForm,
   FormStyled,
@@ -19,7 +20,7 @@ import { CSSObjectWithLabel } from 'react-select'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import { useAppDispatch } from '../../app/hooks.ts'
+import { useEffect } from 'react'
 
 const statesOptions: OptionValue[] = [
   { value: 'alamaba', label: 'Alamaba' },
@@ -55,22 +56,31 @@ const selectDropdownStyles = {
 }
 
 const CreateEmployeeForm = () => {
-  const dispatch = useAppDispatch()
-
   const {
     register,
     handleSubmit,
     trigger,
     control,
     reset,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
 
+  const [addEmployeeTrigger, { isSuccess, isError }] = useAddEmployeeMutation()
+
   const saveEmployee: SubmitHandler<FormData> = (data) => {
-    console.log(data)
+    const dataFormatted = {
+      ...data,
+      birthdate: data.birthdate.toDateString(),
+      startDate: data.startDate.toDateString(),
+    }
+
+    addEmployeeTrigger(dataFormatted)
   }
 
-  // console.log(isValid)
+  useEffect(() => {
+    console.log('dans use effect')
+  }, [isError, isSuccess])
+
   return (
     <>
       <Container>

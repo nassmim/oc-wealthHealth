@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { EmployeeEntity } from './employeesSlice'
+import { Employee } from './employeesSlice'
 import { SingleValue } from 'react-select'
 import {
   EntriesLengthChoice,
@@ -30,12 +30,12 @@ const DisplayTable = ({
   searchLabel = 'Search',
   isPaginable = false,
 }: {
-  data: EmployeeEntity[]
+  data: Employee[]
   columns: TableColumn[]
-  initialSort?: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
+  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
   entriesNumberOptions?: OptionValue[]
   isSearchable?: boolean
-  fieldsSearched?: [keyof EmployeeEntity][]
+  fieldsSearched?: [keyof Employee][]
   searchOnFullWord?: boolean
   searchLabel?: string
   isPaginable?: boolean
@@ -81,7 +81,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: EmployeeEntity, b: EmployeeEntity) =>
+          (a: Employee, b: Employee) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -119,7 +119,7 @@ const DisplayTable = ({
 
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: EmployeeEntity[]
+    dataToUse: Employee[]
   ) => {
     if (valueToBeTrue) {
       setTableData(dataToUse)
@@ -129,7 +129,7 @@ const DisplayTable = ({
     }
   }
 
-  const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
+  const sliceData = (dataToSlice: Employee[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
