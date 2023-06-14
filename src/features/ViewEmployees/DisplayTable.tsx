@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { EmployeeEntity } from './employeesSlice'
-
+import { SingleValue } from 'react-select'
 import {
   EntriesLengthChoice,
   SearchField,
@@ -41,6 +41,10 @@ const DisplayTable = ({
   isPaginable: boolean
 }) => {
   const dataSlice: React.MutableRefObject<number[]> = useRef([])
+
+  const [pagePreviousClickable, setPagePreviousClickable] = useState(false)
+  const [pageNextClickable, setPageNextClickable] = useState(true)
+
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
     React.Dispatch<React.SetStateAction<OptionValue>>
@@ -65,8 +69,8 @@ const DisplayTable = ({
     [pageNumber]
   )
 
-  const handleEntriesNumberChange = (option: OptionValue) => {
-    setEntriesNumberChoice(option)
+  const handleEntriesNumberChange = (option: SingleValue<OptionValue>) => {
+    if (option) setEntriesNumberChoice(option)
   }
 
   const dataInitiallySorted = useMemo(() => {
@@ -94,7 +98,17 @@ const DisplayTable = ({
     searchOnFullWord,
   })
 
-  const handleSearch = (e) => {
+  const handlePaginateNext = () => {
+    setPageNextClickable(
+      pageNumber <
+        Math.ceil(tableData.length / Number(entriesNumberChoice.value))
+    )
+  }
+  const handlePaginatePrevious = () => {
+    setPagePreviousClickable(pageNumber > 1)
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setHasBeenFiltered(true)
     filter(value)
@@ -138,6 +152,8 @@ const DisplayTable = ({
 
   useEffect(() => {
     sliceData(tableData)
+    handlePaginateNext()
+    handlePaginatePrevious()
   }, [pageNumber, entriesNumberChoice.value])
 
   return (
@@ -166,7 +182,8 @@ const DisplayTable = ({
       {isPaginable && (
         <TablePagination>
           <p>
-            {dataSlice.current[0] + 1} - {dataSlice.current[1]} in {data.length}
+            Page {pageNumber}: {dataSlice.current[0] + 1} -{' '}
+            {dataSlice.current[1]} in {data.length}
           </p>
           <div className="arrows">
             <Arrow
@@ -174,16 +191,24 @@ const DisplayTable = ({
               alt="Previous page"
               width="20px"
               rotate="0deg"
-              cursor="pointer"
-              onClick={() => setPageNumber(pageNumber - 1)}
+              cursor={pagePreviousClickable ? 'pointer' : 'cursor'}
+              opacity={pagePreviousClickable ? '1' : '0.5'}
+              onClick={() =>
+                pagePreviousClickable
+                  ? setPageNumber(pageNumber - 1)
+                  : undefined
+              }
             />
             <Arrow
               src={PaginateLeftArrow}
               alt="Previous page"
               width="20px"
               rotate="180deg"
-              cursor="pointer"
-              onClick={() => setPageNumber(pageNumber + 1)}
+              cursor={pageNextClickable ? 'pointer' : 'cursor'}
+              opacity={pageNextClickable ? '1' : '0.5'}
+              onClick={() =>
+                pageNextClickable ? setPageNumber(pageNumber + 1) : undefined
+              }
             />
           </div>
         </TablePagination>
