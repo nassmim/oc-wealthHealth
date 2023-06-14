@@ -14,7 +14,22 @@ export const apiEmployeesSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      // transformResponse: (response: Employee[]) => response
+      async onQueryStarted(employee, { dispatch, queryFulfilled }) {
+        const employeesUpdated = dispatch(
+          apiEmployeesSlice.util.updateQueryData(
+            'getEmployees',
+            undefined,
+            (draft) => {
+              draft.push(employee)
+            }
+          )
+        )
+        try {
+          queryFulfilled
+        } catch {
+          employeesUpdated.undo()
+        }
+      },
     }),
   }),
 })

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { FormData } from '../CreateEmployee/models/formData'
 
 export interface Employee {
   firstName: string

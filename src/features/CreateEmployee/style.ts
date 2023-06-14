@@ -17,6 +17,7 @@ export const FormStyled = styled.form`
   .submit-button {
     width: 10%;
     align-self: center;
+    cursor: pointer;
   }
 `
 

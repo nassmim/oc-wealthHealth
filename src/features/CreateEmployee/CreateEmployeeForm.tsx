@@ -78,7 +78,7 @@ const CreateEmployeeForm = () => {
   }
 
   useEffect(() => {
-    console.log('dans use effect')
+    if (isSuccess) reset()
   }, [isError, isSuccess])
 
   return (

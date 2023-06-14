@@ -1,19 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import employeesReducer from '../features/ViewEmployees/employeesSlice'
 import { apiSlice } from '../features/api/apiSlice'
-import {
-  Spinner,
-  pendingTasksReducer,
-  pendingTask,
-  begin,
-  end,
-} from 'react-redux-spinner'
-import { Reducer } from 'react'
 
 const store = configureStore({
   reducer: {
     employees: employeesReducer,
-    pendingTasks: pendingTasksReducer,
     [apiSlice.reducerPath]: apiSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>

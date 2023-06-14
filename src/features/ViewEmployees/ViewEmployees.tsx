@@ -102,7 +102,7 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
-            initialSort={{ column: 'id', order: 'asc' }}
+            // initialSort={{ column: 'firstName', order: 'asc' }}
             entriesNumberOptions={entriesNumberOptions}
             isSearchable={true}
             searchOnFullWord={false}
