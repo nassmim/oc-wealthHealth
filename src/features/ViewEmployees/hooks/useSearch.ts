@@ -7,7 +7,7 @@ const useSearch = ({
   searchOnFullWord,
 }: {
   data: EmployeeEntity[]
-  fieldsSearched?: [keyof EmployeeEntity][]
+  fieldsSearched: [keyof EmployeeEntity][]
   searchOnFullWord: boolean
 }): [EmployeeEntity[], (value: string) => void] => {
   const [tableData, setTableData] = useState(data)
@@ -32,7 +32,7 @@ const useSearch = ({
           return true
         }
 
-        if (!fieldsSearched) {
+        if (!fieldsSearched.length) {
           Object.values(item).every((key) => {
             return keepValue(key.match(regexToMatch))
           })

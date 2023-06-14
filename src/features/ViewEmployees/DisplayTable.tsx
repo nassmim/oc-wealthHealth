@@ -23,23 +23,30 @@ const DisplayTable = ({
   data,
   columns,
   initialSort,
-  entriesNumberOptions,
+  entriesNumberOptions = [],
   isSearchable = true,
-  fieldsSearched,
+  fieldsSearched = [],
   searchOnFullWord = false,
   searchLabel = 'Search',
   isPaginable = true,
 }: {
   data: EmployeeEntity[]
   columns: TableColumn[]
-  initialSort: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
-  entriesNumberOptions: OptionValue[]
-  isSearchable: boolean
+  initialSort?: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
+  entriesNumberOptions?: OptionValue[]
+  isSearchable?: boolean
   fieldsSearched?: [keyof EmployeeEntity][]
-  searchOnFullWord: boolean
-  searchLabel: string
-  isPaginable: boolean
+  searchOnFullWord?: boolean
+  searchLabel?: string
+  isPaginable?: boolean
 }) => {
+  if (isPaginable && !entriesNumberOptions) {
+    alert(
+      'entriesNumberOptions must be specified if you set isPaginable to true'
+    )
+    throw new Error()
+  }
+
   const dataSlice: React.MutableRefObject<number[]> = useRef([])
 
   const [pagePreviousClickable, setPagePreviousClickable] = useState(false)
@@ -58,12 +65,8 @@ const DisplayTable = ({
   const [hasBeenFiltered, setHasBeenFiltered] = useState(false)
 
   const deriveDataSlice = useCallback(
-    (position: number, offset?: number): number[] => {
-      const finalPageNumber = offset ? offset : pageNumber
-      const dataSlice = [
-        position * (finalPageNumber - 1),
-        position * finalPageNumber,
-      ]
+    (position: number, page: number): number[] => {
+      const dataSlice = [position * (page - 1), position * page]
       return dataSlice
     },
     [pageNumber]
@@ -127,10 +130,16 @@ const DisplayTable = ({
   }
 
   const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
-    const newDataSlice = deriveDataSlice(
-      Number(entriesNumberChoice.value),
-      offset
-    )
+    let numberOfEntries: number, page: number | undefined
+
+    if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
+    else numberOfEntries = Number(entriesNumberChoice.value)
+
+    if (!isPaginable) page = 1
+    else page = offset ? offset : pageNumber
+
+    const newDataSlice = deriveDataSlice(numberOfEntries, page)
+
     dataSlice.current = newDataSlice
     setTableDataSliced(dataToSlice.slice(newDataSlice[0], newDataSlice[1]))
   }
@@ -152,21 +161,25 @@ const DisplayTable = ({
 
   useEffect(() => {
     sliceData(tableData)
-    handlePaginateNext()
-    handlePaginatePrevious()
-  }, [pageNumber, entriesNumberChoice.value])
+    if (isPaginable) {
+      handlePaginateNext()
+      handlePaginatePrevious()
+    }
+  }, [pageNumber, entriesNumberChoice])
 
   return (
     <>
       <TableDisplayOptions>
-        <EntriesLengthChoice>
-          <p>Show</p>
-          <EntriesNumberSelectDropdown
-            onChange={handleEntriesNumberChange}
-            options={entriesNumberOptions}
-          />
-          <p>entries</p>
-        </EntriesLengthChoice>
+        {entriesNumberOptions.length > 1 && (
+          <EntriesLengthChoice>
+            <p>Show</p>
+            <EntriesNumberSelectDropdown
+              onChange={handleEntriesNumberChange}
+              options={entriesNumberOptions}
+            />
+            <p>entries</p>
+          </EntriesLengthChoice>
+        )}
         {isSearchable && (
           <SearchField>
             <p>{searchLabel}</p>
