@@ -16,28 +16,27 @@ const customStyles = {
 
 Modal.setAppElement('#root')
 
-const SuccessModal = () => {
-  const [modalIsOpen, setIsOpen] = useState(false)
-
-  function openModal() {
-    setIsOpen(true)
-  }
-
-  function closeModal() {
-    setIsOpen(false)
-  }
-
+const SuccessModal = ({
+  isOpen,
+  handleModal,
+  textToDisplay,
+}: {
+  isOpen: boolean
+  handleModal: (visible: boolean) => void
+  textToDisplay: string
+}) => {
   return (
     <div>
-      <button onClick={openModal}>Open Modal</button>
       <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
+        isOpen={isOpen}
+        onRequestClose={() => handleModal(false)}
+        shouldCloseOnOverlayClick={true}
+        shouldCloseOnEsc={true}
         style={customStyles}
         portalClassName="success-modal"
-        contentLabel="Example Modal"
       >
-        <h2>Employee Created!</h2>
+        <h2>{textToDisplay}</h2>
+        {/* <button onClick={() => handleModal(false)}>Ok</button> */}
       </Modal>
     </div>
   )
