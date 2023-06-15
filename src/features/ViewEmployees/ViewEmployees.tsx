@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 import PulseLoader from 'react-spinners/PulseLoader'
-
+import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
@@ -104,10 +104,28 @@ const ViewEmployees = () => {
             }
             entriesUnits={entriesNumberOptionsProps.entriesUnits}
             isSearchable={true}
+            // fieldsSearched={[]}
             searchOnFullWord={false}
             searchLabel="Search"
+            searchInputsProps={{ id: 'search-employee' }}
             isPaginable={true}
             pagesNumberVisible={true}
+            paginateArrowProps={{
+              previous: {
+                src: PaginateLeftArrow,
+                alt: 'Previous page',
+                width: '20px',
+                rotate: '0deg',
+              },
+              next: {
+                src: PaginateLeftArrow,
+                alt: 'Next page',
+                width: '20px',
+                rotate: '180deg',
+              },
+            }}
+            textForDataNull="There is no employee in your company. Please add them from the form"
+            textForDataFilteredNull="No results from your search"
           />
         )}
       </MainContainer>

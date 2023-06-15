@@ -9,8 +9,7 @@ import {
   NoData,
 } from './style.ts'
 
-import Select, { OptionProps, ActionMeta } from 'react-select'
-import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
+import Select from 'react-select'
 
 import EmployeesTable from './Table/Table.tsx'
 import type { TableColumn } from './types.tsx'
@@ -31,23 +30,31 @@ const DisplayTable = ({
   entriesUnits = '',
   isSearchable = false,
   fieldsSearched = [],
+  searchInputsProps,
   searchOnFullWord = false,
   searchLabel = 'Search',
   isPaginable = false,
   pagesNumberVisible = false,
+  paginateArrowProps,
+  textForDataNull = 'There is no data yet',
+  textForDataFilteredNull = 'There are o results from your search',
 }: {
   data: Employee[]
   columns: TableColumn[]
   initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
-  entriesNumberOptionsProps: object
+  entriesNumberOptionsProps: { [key: string]: any }
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
   fieldsSearched?: [keyof Employee][]
+  searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
   isPaginable?: boolean
   pagesNumberVisible?: boolean
+  paginateArrowProps: { [key: string]: any }
+  textForDataNull: string
+  textForDataFilteredNull: string
 }) => {
   const entriesNumberOptions = entriesNumberOptionsProps.options
 
@@ -93,10 +100,7 @@ const DisplayTable = ({
     [pageNumber]
   )
 
-  const handleEntriesNumberChange = (
-    newValue: unknown,
-    actionMeta: ActionMeta<unknown>
-  ) => {
+  const handleEntriesNumberChange = (newValue: unknown) => {
     if (newValue) setEntriesNumberChoice(newValue as OptionValue)
   }
 
@@ -218,7 +222,7 @@ const DisplayTable = ({
             <input
               type="search"
               name="search"
-              id="search-employee"
+              {...searchInputsProps}
               onChange={handleSearch}
             />
           </SearchField>
@@ -232,10 +236,7 @@ const DisplayTable = ({
           </p>
           <div className="arrows">
             <Arrow
-              src={PaginateLeftArrow}
-              alt="Previous page"
-              width="20px"
-              rotate="0deg"
+              {...paginateArrowProps.previous}
               cursor={pagePreviousClickable ? 'pointer' : 'cursor'}
               opacity={pagePreviousClickable ? '1' : '0.5'}
               onClick={() =>
@@ -259,10 +260,7 @@ const DisplayTable = ({
                 </p>
               ))}
             <Arrow
-              src={PaginateLeftArrow}
-              alt="Previous page"
-              width="20px"
-              rotate="180deg"
+              {...paginateArrowProps.next}
               cursor={pageNextClickable ? 'pointer' : 'cursor'}
               opacity={pageNextClickable ? '1' : '0.5'}
               onClick={() =>
@@ -280,9 +278,7 @@ const DisplayTable = ({
         />
         {!tableData.length && (
           <NoData>
-            {hasBeenFiltered
-              ? 'No results from your search'
-              : 'There is no employee in your company. Please add them from the form'}
+            {hasBeenFiltered ? textForDataNull : textForDataFilteredNull}
           </NoData>
         )}
       </div>
