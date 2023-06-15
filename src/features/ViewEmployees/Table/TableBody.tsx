@@ -1,20 +1,20 @@
-import { EmployeeEntity } from '../employeesSlice'
+import { Employee } from '../employeesSlice'
 import type { TableColumn } from '../types.tsx'
 
 const TableBody = ({
   employees,
   columns,
 }: {
-  employees: EmployeeEntity[]
+  employees: Employee[]
   columns: TableColumn[]
 }) => {
   return (
     <tbody>
-      {employees.map((employee: EmployeeEntity) => (
-        <tr key={employee.id}>
+      {employees.map((employee: Employee, index: number) => (
+        <tr key={`${index}-${employee.firstName}`}>
           {columns.map(({ accessor }, index) => {
-            const value = employee[accessor as keyof EmployeeEntity]
-              ? employee[accessor as keyof EmployeeEntity]
+            const value = employee[accessor as keyof Employee]
+              ? employee[accessor as keyof Employee]
               : '——'
             return <td key={index}>{value}</td>
           })}

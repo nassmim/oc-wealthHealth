@@ -3,14 +3,14 @@ import { EmployeesTableStyled } from './style.ts'
 import TableHead from './TableHead.tsx'
 import TableBody from './TableBody.tsx'
 import type { TableColumn } from '../types.tsx'
-import { EmployeeEntity } from '../employeesSlice.ts'
+import { Employee } from '../employeesSlice.ts'
 
 const EmployeesTable = ({
   data,
   columns,
   sortData,
 }: {
-  data: EmployeeEntity[]
+  data: Employee[]
   columns: TableColumn[]
   sortData: (sortingField: string, sortingOrder: string) => void
 }) => {

@@ -7,12 +7,25 @@ export const SectionEmployeeForm = styled.div`
   row-gap: 10px;
 `
 
-export const FormStyled = styled.div`
+export const FormStyled = styled.form`
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+
+  .submit-button {
+    width: 10%;
+    align-self: center;
+    cursor: pointer;
+  }
+`
+
+export const FieldsStyled = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
-  margin-bottom: 20px;
 
   label {
     width: fit-content;

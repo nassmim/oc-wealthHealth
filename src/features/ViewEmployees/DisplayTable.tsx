@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { EmployeeEntity } from './employeesSlice'
-import { SingleValue } from 'react-select'
+import { Employee } from './employeesSlice'
 import {
   EntriesLengthChoice,
   SearchField,
@@ -10,36 +9,55 @@ import {
   NoData,
 } from './style.ts'
 
-import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
+import Select from 'react-select'
 
 import EmployeesTable from './Table/Table.tsx'
 import type { TableColumn } from './types.tsx'
-import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import EntriesNumberSelectDropdown from './EntriesNumberSelectDropdown.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
+
+type OptionValue = {
+  value: string
+  label: string
+}
 
 const DisplayTable = ({
   data,
   columns,
   initialSort,
-  entriesNumberOptions = [],
+  entriesNumberOptionsProps,
+  showEntriesNumberText = '',
+  entriesUnits = '',
   isSearchable = false,
   fieldsSearched = [],
+  searchInputsProps,
   searchOnFullWord = false,
   searchLabel = 'Search',
   isPaginable = false,
+  pagesNumberVisible = false,
+  paginateArrowProps,
+  textForDataNull = 'There is no data yet',
+  textForDataFilteredNull = 'There are o results from your search',
 }: {
-  data: EmployeeEntity[]
+  data: Employee[]
   columns: TableColumn[]
-  initialSort?: { column: keyof EmployeeEntity; order: 'asc' | 'desc' }
-  entriesNumberOptions?: OptionValue[]
+  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
+  entriesNumberOptionsProps: { [key: string]: any }
+  showEntriesNumberText?: string
+  entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof EmployeeEntity][]
+  fieldsSearched?: [keyof Employee][]
+  searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
   isPaginable?: boolean
+  pagesNumberVisible?: boolean
+  paginateArrowProps: { [key: string]: any }
+  textForDataNull: string
+  textForDataFilteredNull: string
 }) => {
+  const entriesNumberOptions = entriesNumberOptionsProps.options
+
   if (isPaginable && !entriesNumberOptions.length) {
     alert(
       'entriesNumberOptions must be specified if you set isPaginable to true'
@@ -65,7 +83,7 @@ const DisplayTable = ({
   const [entriesNumberChoice, setEntriesNumberChoice]: [
     OptionValue,
     React.Dispatch<React.SetStateAction<OptionValue>>
-  ] = useState(entriesNumberOptions[0])
+  ] = useState(entriesNumberOptions[0] as OptionValue)
 
   const [pageNumber, setPageNumber]: [
     number,
@@ -82,8 +100,8 @@ const DisplayTable = ({
     [pageNumber]
   )
 
-  const handleEntriesNumberChange = (option: SingleValue<OptionValue>) => {
-    if (option) setEntriesNumberChoice(option)
+  const handleEntriesNumberChange = (newValue: unknown) => {
+    if (newValue) setEntriesNumberChoice(newValue as OptionValue)
   }
 
   const dataInitiallySorted = useMemo(() => {
@@ -91,7 +109,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: EmployeeEntity, b: EmployeeEntity) =>
+          (a: Employee, b: Employee) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -113,6 +131,7 @@ const DisplayTable = ({
 
   const handlePaginateNext = () => {
     setPageNextClickable(pageNumber < totalPagesNumber)
+    setPageNextClickable(pageNumber < totalPagesNumber)
   }
   const handlePaginatePrevious = () => {
     setPagePreviousClickable(pageNumber > 1)
@@ -126,7 +145,7 @@ const DisplayTable = ({
 
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: EmployeeEntity[]
+    dataToUse: Employee[]
   ) => {
     if (valueToBeTrue) {
       setTableData(dataToUse)
@@ -136,7 +155,7 @@ const DisplayTable = ({
     }
   }
 
-  const sliceData = (dataToSlice: EmployeeEntity[], offset?: number) => {
+  const sliceData = (dataToSlice: Employee[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
@@ -157,14 +176,18 @@ const DisplayTable = ({
   }, [dataInitiallySorted])
 
   useEffect(() => {
-    setTableData(tableDataSorted)
     setAndSliceTableData(hasBeenSorted, tableDataSorted)
   }, [hasBeenSorted, tableDataSorted])
 
   useEffect(() => {
-    setTableData(tableDataFiltered)
     setAndSliceTableData(hasBeenFiltered, tableDataFiltered)
   }, [hasBeenFiltered, tableDataFiltered])
+
+  useEffect(() => {
+    setTotalPageNumber(
+      Math.ceil(tableData.length / Number(entriesNumberChoice.value))
+    )
+  }, [entriesNumberChoice, tableData])
 
   useEffect(() => {
     setTotalPageNumber(
@@ -185,12 +208,12 @@ const DisplayTable = ({
       <TableDisplayOptions>
         {entriesNumberOptions.length >= 1 && (
           <EntriesLengthChoice>
-            <p>Show</p>
-            <EntriesNumberSelectDropdown
+            <p>{showEntriesNumberText}</p>
+            <Select
               onChange={handleEntriesNumberChange}
-              options={entriesNumberOptions}
+              {...entriesNumberOptionsProps}
             />
-            <p>entries</p>
+            <p>{entriesUnits}</p>
           </EntriesLengthChoice>
         )}
         {isSearchable && (
@@ -199,7 +222,7 @@ const DisplayTable = ({
             <input
               type="search"
               name="search"
-              id="search-employee"
+              {...searchInputsProps}
               onChange={handleSearch}
             />
           </SearchField>
@@ -213,10 +236,7 @@ const DisplayTable = ({
           </p>
           <div className="arrows">
             <Arrow
-              src={PaginateLeftArrow}
-              alt="Previous page"
-              width="20px"
-              rotate="0deg"
+              {...paginateArrowProps.previous}
               cursor={pagePreviousClickable ? 'pointer' : 'cursor'}
               opacity={pagePreviousClickable ? '1' : '0.5'}
               onClick={() =>
@@ -225,24 +245,22 @@ const DisplayTable = ({
                   : undefined
               }
             />
-            {[...Array(totalPagesNumber)].map((i, index) => (
-              <p
-                key={`${index}-${i}`}
-                className={
-                  'page-number' +
-                  ' ' +
-                  (pageNumber === index + 1 ? 'active' : '')
-                }
-                onClick={() => setPageNumber(index + 1)}
-              >
-                {index + 1}
-              </p>
-            ))}
+            {pagesNumberVisible &&
+              [...Array(totalPagesNumber)].map((i, index) => (
+                <p
+                  key={`${index}-${i}`}
+                  className={
+                    'page-number' +
+                    ' ' +
+                    (pageNumber === index + 1 ? 'active' : '')
+                  }
+                  onClick={() => setPageNumber(index + 1)}
+                >
+                  {index + 1}
+                </p>
+              ))}
             <Arrow
-              src={PaginateLeftArrow}
-              alt="Previous page"
-              width="20px"
-              rotate="180deg"
+              {...paginateArrowProps.next}
               cursor={pageNextClickable ? 'pointer' : 'cursor'}
               opacity={pageNextClickable ? '1' : '0.5'}
               onClick={() =>
@@ -260,9 +278,7 @@ const DisplayTable = ({
         />
         {!tableData.length && (
           <NoData>
-            {hasBeenFiltered
-              ? 'No results from your search'
-              : 'There is no employee in your company. Please add them from the form'}
+            {hasBeenFiltered ? textForDataNull : textForDataFilteredNull}
           </NoData>
         )}
       </div>

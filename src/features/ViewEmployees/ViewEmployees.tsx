@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom'
 import { ButtonStyled } from '../../shared/style.ts'
 import { Title } from '../../shared/style.ts'
 import PulseLoader from 'react-spinners/PulseLoader'
-
+import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
-import type { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import DisplayTable from './DisplayTable.tsx'
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts'
 import { employeesFetched } from './employeesSlice.ts'
+import entriesNumberOptionsProps from './entriesOptionsNumberProps.ts'
 
 const columns: TableColumn[] = [
   { label: 'First Name', accessor: 'firstName', sortable: true },
@@ -23,13 +23,6 @@ const columns: TableColumn[] = [
   { label: 'City', accessor: 'city', sortable: true },
   { label: 'State', accessor: 'state', sortable: true },
   { label: 'Zipcode', accessor: 'zipcode', sortable: true },
-]
-
-const entriesNumberOptions: OptionValue[] = [
-  { value: '10', label: '10' },
-  { value: '25', label: '25' },
-  { value: '50', label: '50' },
-  { value: '100', label: '100' },
 ]
 
 const ViewEmployees = () => {
@@ -73,7 +66,6 @@ const ViewEmployees = () => {
 
   useEffect(() => {
     let showTable = 1
-    console.log(isLoading)
     if (isLoading) {
       showTable = setTimeout(() => setTableIsVisible(true), 2000)
     } else setTableIsVisible(true)
@@ -103,12 +95,37 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
-            initialSort={{ column: 'id', order: 'asc' }}
-            entriesNumberOptions={entriesNumberOptions}
+            // initialSort={{ column: 'firstName', order: 'asc' }}
+            entriesNumberOptionsProps={
+              entriesNumberOptionsProps.selectNativeProps
+            }
+            showEntriesNumberText={
+              entriesNumberOptionsProps.showEntriesNumberText
+            }
+            entriesUnits={entriesNumberOptionsProps.entriesUnits}
             isSearchable={true}
+            // fieldsSearched={[]}
             searchOnFullWord={false}
             searchLabel="Search"
+            searchInputsProps={{ id: 'search-employee' }}
             isPaginable={true}
+            pagesNumberVisible={true}
+            paginateArrowProps={{
+              previous: {
+                src: PaginateLeftArrow,
+                alt: 'Previous page',
+                width: '20px',
+                rotate: '0deg',
+              },
+              next: {
+                src: PaginateLeftArrow,
+                alt: 'Next page',
+                width: '20px',
+                rotate: '180deg',
+              },
+            }}
+            textForDataNull="There is no employee in your company. Please add them from the form"
+            textForDataFilteredNull="No results from your search"
           />
         )}
       </MainContainer>

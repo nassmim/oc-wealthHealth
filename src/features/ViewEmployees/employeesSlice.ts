@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { RootState } from '../../app/store'
-import { FormData } from '../CreateEmployee/models/formData'
 
 export interface Employee {
   firstName: string
@@ -14,15 +13,11 @@ export interface Employee {
   zipcode: string
 }
 
-export interface EmployeeEntity extends FormData {
-  id: string
-}
-
 const initialState: {
-  employees: EmployeeEntity[]
+  // employees: Employee[]
   hasBeenFetched: boolean
 } = {
-  employees: [],
+  // employees: [],
   hasBeenFetched: false,
 }
 
@@ -38,7 +33,7 @@ const employeesSlice = createSlice({
 
 const employeesReducer = employeesSlice.reducer
 
-export const selectEmployees = (state: RootState) => state.employees
+// export const selectEmployees = (state: RootState) => state.employees
 
 export const { employeesFetched } = employeesSlice.actions
 
