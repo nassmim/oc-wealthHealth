@@ -1,5 +1,5 @@
-import { Employee } from '../employeesSlice'
-import type { TableColumn } from '../types.tsx'
+import { Employee } from '../../ViewEmployees/employeesSlice.ts'
+import type { TableColumn } from '../../ViewEmployees/types.tsx'
 
 const TableBody = ({
   employees,
