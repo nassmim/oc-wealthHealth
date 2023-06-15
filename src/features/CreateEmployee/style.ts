@@ -5,6 +5,12 @@ export const SectionEmployeeForm = styled.div`
   flex-direction: column;
   align-items: center;
   row-gap: 10px;
+
+  .close-success-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
 `
 
 export const FormStyled = styled.form`

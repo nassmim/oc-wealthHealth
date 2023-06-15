@@ -20,7 +20,7 @@ import { CSSObjectWithLabel } from 'react-select'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 const statesOptions: OptionValue[] = [
   { value: 'alamaba', label: 'Alamaba' },
@@ -56,6 +56,7 @@ const selectDropdownStyles = {
 }
 
 const CreateEmployeeForm = () => {
+  const [modalIsOpen, setModalIsOpen] = useState(false)
   const {
     register,
     handleSubmit,
@@ -66,6 +67,10 @@ const CreateEmployeeForm = () => {
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
 
   const [addEmployeeTrigger, { isSuccess, isError }] = useAddEmployeeMutation()
+
+  const handleModal = (visible: boolean) => {
+    setModalIsOpen(visible)
+  }
 
   const saveEmployee: SubmitHandler<FormData> = (data) => {
     const dataFormatted = {
@@ -78,6 +83,7 @@ const CreateEmployeeForm = () => {
   }
 
   useEffect(() => {
+    if (isError || isSuccess) setModalIsOpen(true)
     if (isSuccess) reset()
   }, [isError, isSuccess])
 
@@ -238,7 +244,13 @@ const CreateEmployeeForm = () => {
               </button>
             </FormStyled>
 
-            <SuccessModal />
+            <SuccessModal
+              isOpen={modalIsOpen}
+              handleModal={handleModal}
+              textToDisplay={
+                isSuccess ? 'Employee Created!' : 'Employee could not be saved'
+              }
+            />
           </SectionEmployeeForm>
         </MainContainer>
       </Container>
