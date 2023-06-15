@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { Employee } from './employeesSlice'
+import { Employee } from '../ViewEmployees/employeesSlice.ts'
 import {
   EntriesLengthChoice,
   SearchField,
@@ -7,12 +7,12 @@ import {
   TablePagination,
   Arrow,
   NoData,
-} from './style.ts'
+} from '../ViewEmployees/style.ts'
 
 import Select from 'react-select'
 
 import EmployeesTable from './Table/Table.tsx'
-import type { TableColumn } from './types.tsx'
+import type { TableColumn } from '../ViewEmployees/types.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
 

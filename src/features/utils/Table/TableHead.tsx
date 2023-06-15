@@ -1,6 +1,6 @@
-import { Arrow } from '../style.ts'
+import { Arrow } from '../../ViewEmployees/style.ts'
 import PaginateLeftArrow from '../../../assets/pagination-left-arrow.svg'
-import type { TableColumn } from '../types.tsx'
+import type { TableColumn } from '../../ViewEmployees/types.tsx'
 import { useState } from 'react'
 
 const TableHead = ({

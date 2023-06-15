@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
 import type { TableColumn } from './types.tsx'
-import DisplayTable from './DisplayTable.tsx'
+import DisplayTable from '../utils/DisplayTable.tsx'
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts'
 import { employeesFetched } from './employeesSlice.ts'
 import entriesNumberOptionsProps from './entriesOptionsNumberProps.ts'

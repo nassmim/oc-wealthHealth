@@ -2,8 +2,8 @@ import { EmployeesTableStyled } from './style.ts'
 
 import TableHead from './TableHead.tsx'
 import TableBody from './TableBody.tsx'
-import type { TableColumn } from '../types.tsx'
-import { Employee } from '../employeesSlice.ts'
+import type { TableColumn } from '../../ViewEmployees/types.tsx'
+import { Employee } from '../../ViewEmployees/employeesSlice.ts'
 
 const EmployeesTable = ({
   data,

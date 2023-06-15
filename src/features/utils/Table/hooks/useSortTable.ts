@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Employee } from '../../employeesSlice'
+import { Employee } from '../../../ViewEmployees/employeesSlice'
 
 const useSortTable = (
   data: Employee[] = []
