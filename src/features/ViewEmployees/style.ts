@@ -80,7 +80,6 @@ export const Arrow = styled.img.attrs((props) => ({
 }))`
   ${(props) => {
     if (props.style) {
-      console.log(props.style)
       return `
         width: ${props.width};
         cursor: ${props.style?.cursor};
