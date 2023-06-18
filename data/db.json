@@ -697,16 +697,12 @@
   ],
   "departments": [
     {
-      "value": "sales",
-      "label": "marketing"
+      "value": "marketing",
+      "label": "Marketing"
     },
     {
       "value": "sales",
       "label": "Sales"
-    },
-    {
-      "value": "marketing",
-      "label": "marketing"
     },
     {
       "value": "engineering",

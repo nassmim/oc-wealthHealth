@@ -11,51 +11,27 @@ import {
   FieldStyled,
   FieldsetStyled,
   DepartmentField,
+  selectDropdownStyles,
 } from './style.ts'
 import { ButtonStyled } from '../../shared/style.ts'
 import DatePickerCustom from './DatePicker/DatePickerCustom.tsx'
 import DatePickerCustomCalendar from './DatePicker/DatePickerCustomCalendar.tsx'
 import renderCustomDatePickerHeader from './DatePicker/DatePickerCustomHeader.tsx'
-import { CSSObjectWithLabel } from 'react-select'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
-import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import { useEffect, useState } from 'react'
-
-const statesOptions: OptionValue[] = [
-  { value: 'alamaba', label: 'Alamaba' },
-  { value: 'alaska', label: 'Alaska' },
-  { value: 'arizona', label: 'Arizona' },
-]
-
-const companyDepartmentOptions: OptionValue[] = [
-  { value: 'alamaba', label: 'Alamaba' },
-  { value: 'alaska', label: 'Alaska' },
-  { value: 'arizona', label: 'Arizona' },
-]
-
-const selectDropdownStyles = {
-  control: (baseStyles: CSSObjectWithLabel) => ({
-    ...baseStyles,
-    backgroundColor: 'lightcyan',
-    paddingTop: '2px',
-    paddingBottom: '2px',
-  }),
-  valueContainer: (baseStyles: CSSObjectWithLabel) => ({
-    ...baseStyles,
-    paddingTop: '0px',
-    paddingBottom: '0px',
-  }),
-  input: (baseStyles: CSSObjectWithLabel) => ({
-    ...baseStyles,
-    paddingTop: '0px',
-    paddingBottom: '0px',
-    marginTop: '0px',
-    marginBottom: '0px',
-  }),
-}
+import useGetStates from './useGetStates.ts'
+import useGetCompanyDepartments from './useGetCompanyDepartments.ts'
 
 const CreateEmployeeForm = () => {
+  const [
+    addEmployeeTrigger,
+    { isSuccess: employeeCreationSucceeded, isError: employeeCreationFailed },
+  ] = useAddEmployeeMutation()
+
+  const statesAsDropdownOptions = useGetStates()
+  const companyDepartmentsAsDropdownOptions = useGetCompanyDepartments()
+
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const {
     register,
@@ -65,8 +41,6 @@ const CreateEmployeeForm = () => {
     reset,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(formSchema) })
-
-  const [addEmployeeTrigger, { isSuccess, isError }] = useAddEmployeeMutation()
 
   const handleModal = (visible: boolean) => {
     setModalIsOpen(visible)
@@ -83,9 +57,10 @@ const CreateEmployeeForm = () => {
   }
 
   useEffect(() => {
-    if (isError || isSuccess) setModalIsOpen(true)
-    if (isSuccess) reset()
-  }, [isError, isSuccess])
+    if (employeeCreationFailed || employeeCreationSucceeded)
+      setModalIsOpen(true)
+    if (employeeCreationSucceeded) reset()
+  }, [employeeCreationFailed, employeeCreationSucceeded])
 
   return (
     <>
@@ -198,7 +173,7 @@ const CreateEmployeeForm = () => {
                       render={({ field: { onChange } }) => (
                         <>
                           <SelectDropdown
-                            options={statesOptions}
+                            options={statesAsDropdownOptions}
                             inputId="state"
                             onChange={(option) => onChange(option?.label)}
                             placeholder="Select his state"
@@ -225,7 +200,7 @@ const CreateEmployeeForm = () => {
                     render={({ field: { onChange } }) => (
                       <>
                         <SelectDropdown
-                          options={companyDepartmentOptions}
+                          options={companyDepartmentsAsDropdownOptions}
                           inputId="department"
                           onChange={(option) => onChange(option?.label)}
                           placeholder="Select his department"
@@ -248,7 +223,9 @@ const CreateEmployeeForm = () => {
               isOpen={modalIsOpen}
               handleModal={handleModal}
               textToDisplay={
-                isSuccess ? 'Employee Created!' : 'Employee could not be saved'
+                employeeCreationSucceeded
+                  ? 'Employee Created!'
+                  : 'Employee could not be saved'
               }
             />
           </SectionEmployeeForm>
