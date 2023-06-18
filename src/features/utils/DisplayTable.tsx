@@ -1,3 +1,7 @@
+/**
+ * CUSTOMIZABLE COMPONENT WHOSE PURPOSE IS TO DISPLAY DATA IN A TABLE
+ */
+
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { Employee } from '../ViewEmployees/employeesSlice.ts'
 import {
@@ -21,23 +25,30 @@ type OptionValue = {
   label: string
 }
 
+/**
+ * Component that shows a table data to the user and different options to
+ * the user to play with it
+ * On top of the data feeding the table, It receives a set of parameters
+ * that define what options are available to the end-user to display data
+ * @returns
+ */
 const DisplayTable = ({
-  data,
-  columns,
-  initialSort,
-  entriesNumberOptionsProps,
-  showEntriesNumberText = '',
-  entriesUnits = '',
-  isSearchable = false,
-  fieldsSearched = [],
-  searchInputsProps,
-  searchOnFullWord = false,
-  searchLabel = 'Search',
-  isPaginable = false,
-  pagesNumberVisible = false,
-  paginateArrowProps,
-  textForDataNull = 'There is no data yet',
-  textForDataFilteredNull = 'There are o results from your search',
+  data, // data contained in the table
+  columns, // headers of the table
+  initialSort, // is data sorted in a specific way at page load?
+  entriesNumberOptionsProps, // the select options to set the table size
+  showEntriesNumberText = 'Show', // the label for the table size select dropdown
+  entriesUnits = 'entries', // the table size units label
+  isSearchable = false, // can the user make a research to filter data?
+  fieldsSearched = [], // which columns must be used if a research is made
+  searchInputsProps, // any property natively used by react-select or HTML select
+  searchOnFullWord = false, // research matching on keyword only or any part of the string
+  searchLabel = 'Search', // the label for the search input
+  isPaginable = false, // can the user paginate to display different pieces of data?
+  pagesNumberVisible = false, // are the pages positions shown to the user?
+  paginateArrowProps, // any property natived used by HTML img
+  textForDataNull = 'There is no data yet', // text to display if there is no data
+  textForDataFilteredNull = 'There are o results from your search', // text to display if the research didn't get any results
 }: {
   data: Employee[]
   columns: TableColumn[]
