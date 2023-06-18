@@ -14,19 +14,27 @@ export const apiEmployeesSlice = apiSlice.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      /**
+       * Optimitic update of the cached list of employees, adding the new one to it
+       * @param {Employee} employee representing the employee created
+       * @param {dispatch: ThunkDispatch, Promise }
+       */
       async onQueryStarted(employee, { dispatch, queryFulfilled }) {
         const employeesUpdated = dispatch(
           apiEmployeesSlice.util.updateQueryData(
             'getEmployees',
             undefined,
+            // Draft represents here the cached state
             (draft) => {
               draft.push(employee)
             }
           )
         )
+        // Runs the Promise
         try {
           queryFulfilled
         } catch {
+          // If it fails, then the employee is removed from the cached list
           employeesUpdated.undo()
         }
       },

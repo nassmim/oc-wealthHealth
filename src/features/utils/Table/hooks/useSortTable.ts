@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { Employee } from '../../../ViewEmployees/employeesSlice'
 
+/**
+ * Custom hook to update the data sorted on the specific column and order
+ * @returns the sorted list along with the function to sort it and a boolean
+ * informing the parent component that the list has been sorted
+ */
 const useSortTable = (
   data: Employee[] = []
 ): [
@@ -11,6 +16,14 @@ const useSortTable = (
   const [tableData, setTableData] = useState(data)
   const [hasBeenSorted, setHasBeenSorted] = useState(false)
 
+  /**
+   *
+   * @param sortingField represents the column name to sort data on
+   * @param sortingOrder indicates the ordering type. If its value is 'asc'
+   * then the list is ordered ascendently
+   * @returns nothing. Updates the table with the sorted one and the boolean
+   * indicating if the table has been sorted or not
+   */
   const sortData = (sortingField: string, sortingOrder: string): void => {
     const dataSorted = [...data].sort((a, b): number => {
       let result: number

@@ -1,3 +1,7 @@
+/**
+ * CUSTOMIZABLE COMPONENT WHOSE PURPOSE IS TO DISPLAY DATA IN A TABLE
+ */
+
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
 import { Employee } from '../ViewEmployees/employeesSlice.ts'
 import {
@@ -21,23 +25,30 @@ type OptionValue = {
   label: string
 }
 
+/**
+ * Component that shows a table data to the user and different options to
+ * the user to play with it
+ * On top of the data feeding the table, It receives a set of parameters
+ * that define what options are available to the end-user to display data
+ * @returns
+ */
 const DisplayTable = ({
-  data,
-  columns,
-  initialSort,
-  entriesNumberOptionsProps,
-  showEntriesNumberText = '',
-  entriesUnits = '',
-  isSearchable = false,
-  fieldsSearched = [],
-  searchInputsProps,
-  searchOnFullWord = false,
-  searchLabel = 'Search',
-  isPaginable = false,
-  pagesNumberVisible = false,
-  paginateArrowProps,
-  textForDataNull = 'There is no data yet',
-  textForDataFilteredNull = 'There are o results from your search',
+  data, // data contained in the table
+  columns, // headers of the table
+  initialSort, // is data sorted in a specific way at page load?
+  entriesNumberOptionsProps, // the select options to set the table size
+  showEntriesNumberText = 'Show', // the label for the table size select dropdown
+  entriesUnits = 'entries', // the table size units label
+  isSearchable = false, // can the user make a research to filter data?
+  fieldsSearched = [], // which columns must be used if a research is made
+  searchInputsProps, // any property natively used by react-select or HTML select
+  searchOnFullWord = false, // research matching on keyword only or any part of the string
+  searchLabel = 'Search', // the label for the search input
+  isPaginable = false, // can the user paginate to display different pieces of data?
+  pagesNumberVisible = false, // are the pages positions shown to the user?
+  paginateArrowProps, // any property natived used by HTML img
+  textForDataNull = 'There is no data yet', // text to display if there is no data
+  textForDataFilteredNull = 'There are o results from your search', // text to display if the research didn't get any results
 }: {
   data: Employee[]
   columns: TableColumn[]
@@ -65,17 +76,15 @@ const DisplayTable = ({
     throw new Error()
   }
 
-  const dataSlice: React.MutableRefObject<number[]> = useRef([])
-
   const [totalPagesNumber, setTotalPageNumber]: [
     number,
     React.Dispatch<React.SetStateAction<number>>
   ] = useState(0)
-  const [pagePreviousClickable, setPagePreviousClickable]: [
+  const [pagePreviousIsClickable, setPagePreviousIsClickable]: [
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>
   ] = useState(false)
-  const [pageNextClickable, setPageNextClickable]: [
+  const [pageNextIsClickable, setPageNextIsClickable]: [
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>
   ] = useState(true)
@@ -92,7 +101,15 @@ const DisplayTable = ({
 
   const [hasBeenFiltered, setHasBeenFiltered] = useState(false)
 
+  /**
+   * Derives the portion of the list to display in the table
+   */
   const deriveDataSlice = useCallback(
+    /**
+     * @param numberOfEntries represents the table size
+     * @param page represents the pagination number
+     * @returns the starting and ending position to slice the data on
+     */
     (numberOfEntries: number, page: number): number[] => {
       const dataSlice = [numberOfEntries * (page - 1), numberOfEntries * page]
       return dataSlice
@@ -104,6 +121,10 @@ const DisplayTable = ({
     if (newValue) setEntriesNumberChoice(newValue as OptionValue)
   }
 
+  /**
+   * If we want to display data in a specific order at first page load
+   * @returns the sorted data
+   */
   const dataInitiallySorted = useMemo(() => {
     if (initialSort) {
       return data
@@ -118,8 +139,19 @@ const DisplayTable = ({
     }
   }, [data, initialSort])
 
+  /* This is the full data that feeds the table. Operations like sorting and 
+  filter are applied to it. So each time they modify this list, we need to save
+  it so that they are always applied to the latest list
+  */
   const [tableData, setTableData] = useState(dataInitiallySorted)
+
+  // This is the list of data that will be displayed in the table, based on
+  // the table size (number of entries shown in one page) and its pagination number
   const [tableDataSliced, setTableDataSliced] = useState(tableData)
+
+  // This is the starting and ending position used to truncate the data
+  // and update the tableDataSliced state
+  const dataSlice: React.MutableRefObject<number[]> = useRef([])
 
   const [tableDataSorted, sortData, hasBeenSorted] = useSortTable(data)
 
@@ -130,24 +162,32 @@ const DisplayTable = ({
   })
 
   const handlePaginateNext = () => {
-    setPageNextClickable(pageNumber < totalPagesNumber)
-    setPageNextClickable(pageNumber < totalPagesNumber)
+    setPageNextIsClickable(pageNumber < totalPagesNumber)
   }
   const handlePaginatePrevious = () => {
-    setPagePreviousClickable(pageNumber > 1)
+    setPagePreviousIsClickable(pageNumber > 1)
   }
 
+  // Filters the table based on the value entered in the search input
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setHasBeenFiltered(true)
     filter(value)
   }
 
+  /**
+   * Updates the full list of data feeding the table and the truncated data
+   * to display when the data has just been altered
+   * @param valueToBeTrue indicates if data has been modified (sorted or filtered)
+   * @param dataToUse is the new list of data feeding the table
+   */
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
     dataToUse: Employee[]
   ) => {
     if (valueToBeTrue) {
+      // Since data has been altered, we need to store it as future operations
+      // like the filter search will be applied on it
       setTableData(dataToUse)
       const offset = 1
       setPageNumber(offset)
@@ -155,9 +195,15 @@ const DisplayTable = ({
     }
   }
 
+  /**
+   * Updates the data that is displayed in the table on a specific page number
+   * @param dataToSlice reprensent the full data contained in the table
+   * @param offset represents the pagination number
+   */
   const sliceData = (dataToSlice: Employee[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
+    // First condition is if no size is defined, then the whole data is displayed
     if (!entriesNumberChoice) numberOfEntries = dataToSlice.length
     else numberOfEntries = Number(entriesNumberChoice.value)
 
@@ -165,11 +211,13 @@ const DisplayTable = ({
     else page = offset ? offset : pageNumber
 
     const newDataSlice = deriveDataSlice(numberOfEntries, page)
+    // The upper bound used for slicing cannot be higher than the list length
     newDataSlice[1] = Math.min(dataToSlice.length, newDataSlice[1])
     dataSlice.current = newDataSlice
     setTableDataSliced(dataToSlice.slice(newDataSlice[0], newDataSlice[1]))
   }
 
+  // Sets the full data and displayed one at first render
   useEffect(() => {
     setTableData(dataInitiallySorted)
     sliceData(dataInitiallySorted)
@@ -183,18 +231,19 @@ const DisplayTable = ({
     setAndSliceTableData(hasBeenFiltered, tableDataFiltered)
   }, [hasBeenFiltered, tableDataFiltered])
 
+  /* Whenever data or the table size is updating, the total number of pages 
+  the user can paginate might be affected
+  */
   useEffect(() => {
     setTotalPageNumber(
       Math.ceil(tableData.length / Number(entriesNumberChoice.value))
     )
   }, [entriesNumberChoice, tableData])
 
-  useEffect(() => {
-    setTotalPageNumber(
-      Math.ceil(tableData.length / Number(entriesNumberChoice.value))
-    )
-  }, [entriesNumberChoice, tableData])
-
+  /* Whenever the total pages number necessary to display the whole table changes,
+  or the user selects a new page, then we need to check if the previous and next button
+  to paginate are still allowed
+  */
   useEffect(() => {
     sliceData(tableData)
     if (entriesNumberChoice) {
@@ -237,10 +286,10 @@ const DisplayTable = ({
           <div className="arrows">
             <Arrow
               {...paginateArrowProps.previous}
-              cursor={pagePreviousClickable ? 'pointer' : 'cursor'}
-              opacity={pagePreviousClickable ? '1' : '0.5'}
+              cursor={pagePreviousIsClickable ? 'pointer' : 'cursor'}
+              opacity={pagePreviousIsClickable ? '1' : '0.5'}
               onClick={() =>
-                pagePreviousClickable
+                pagePreviousIsClickable
                   ? setPageNumber(pageNumber - 1)
                   : undefined
               }
@@ -261,10 +310,10 @@ const DisplayTable = ({
               ))}
             <Arrow
               {...paginateArrowProps.next}
-              cursor={pageNextClickable ? 'pointer' : 'cursor'}
-              opacity={pageNextClickable ? '1' : '0.5'}
+              cursor={pageNextIsClickable ? 'pointer' : 'cursor'}
+              opacity={pageNextIsClickable ? '1' : '0.5'}
               onClick={() =>
-                pageNextClickable ? setPageNumber(pageNumber + 1) : undefined
+                pageNextIsClickable ? setPageNumber(pageNumber + 1) : undefined
               }
             />
           </div>

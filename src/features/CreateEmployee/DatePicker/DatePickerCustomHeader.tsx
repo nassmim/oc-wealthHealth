@@ -5,6 +5,7 @@ const CALENDAR_YEAR_START = 1900
 const today = new Date()
 
 const numberofYears: number = today.getFullYear() - CALENDAR_YEAR_START + 1
+// Generates the list of years to display in the datepicker
 export const years: number[] = [...Array(numberofYears).keys()].map(
   (position: number) => CALENDAR_YEAR_START + position
 )
