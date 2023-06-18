@@ -24,6 +24,7 @@ import useGetStates from './useGetStates.ts'
 import useGetCompanyDepartments from './useGetCompanyDepartments.ts'
 
 const CreateEmployeeForm = () => {
+  // RTK query method to trigger the request to update the DB with a new employee
   const [
     addEmployeeTrigger,
     { isSuccess: employeeCreationSucceeded, isError: employeeCreationFailed },
@@ -46,7 +47,11 @@ const CreateEmployeeForm = () => {
     setModalIsOpen(visible)
   }
 
+  /**
+   * @param data representing the employee information
+   */
   const saveEmployee: SubmitHandler<FormData> = (data) => {
+    // birthdate and start data are converted to string as the data is stored in json format
     const dataFormatted = {
       ...data,
       birthdate: data.birthdate.toDateString(),

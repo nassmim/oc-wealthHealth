@@ -36,4 +36,8 @@ export const ButtonStyled = styled.button`
 
 export const Title = styled.h1`
   text-align: center;
+
+  a {
+    color: black;
+  }
 `

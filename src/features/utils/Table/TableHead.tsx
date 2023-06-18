@@ -13,6 +13,10 @@ const TableHead = ({
   const [sortingField, setSortingField] = useState('')
   const [sortingOrder, setSortingOrder] = useState('')
 
+  /**
+   * Updates the sorting caracteristics (column and order) and the data table
+   * @param accessor representing the column to sort data on
+   */
   const handleSorting = (accessor: string) => {
     const newSortingOrder =
       accessor === sortingField && sortingOrder === 'asc' ? 'desc' : 'asc'

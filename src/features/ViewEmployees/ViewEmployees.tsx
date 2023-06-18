@@ -34,13 +34,23 @@ const ViewEmployees = () => {
 
   const [tableIsVisible, setTableIsVisible] = useState(false)
 
-  const [
-    getEmployeesTrigger,
-    { data: employeesUpdated = [], isError, isLoading, isSuccess },
-  ] = useLazyGetEmployeesQuery()
+  // RTQ query trigger to run the request to get the list of employees
+  const [getEmployeesTrigger, { data: employeesUpdated = [], isLoading }] =
+    useLazyGetEmployeesQuery()
   const [employees, setEmployees] = useState(employeesUpdated)
 
+  /**
+   * Memoized function to get the truncated list of employees depending on
+   * the size and the offset of the data we want to display to our users.
+   * Depends if we want to get all data at page loading or if we want to get
+   * it each time the user paginate/scrolls and this should be done server-side
+   */
   const getEmployees = useCallback(
+    /**
+     * Gets the truncated list
+     * @param fromIndex indicates from which position on the list we start retrieving items
+     * @param toIndex indicates until which position on the list we start retrieving items
+     */
     async (fromIndex = 0, toIndex?: number) => {
       const employeesListFetched = await getEmployeesTrigger(undefined, true)
         .unwrap()

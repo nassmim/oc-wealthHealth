@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { RootState } from '../../app/store'
 
 export interface Employee {
   firstName: string
@@ -14,10 +13,8 @@ export interface Employee {
 }
 
 const initialState: {
-  // employees: Employee[]
   hasBeenFetched: boolean
 } = {
-  // employees: [],
   hasBeenFetched: false,
 }
 
@@ -32,9 +29,6 @@ const employeesSlice = createSlice({
 })
 
 const employeesReducer = employeesSlice.reducer
-
-// export const selectEmployees = (state: RootState) => state.employees
-
 export const { employeesFetched } = employeesSlice.actions
 
 export default employeesReducer

@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Employee } from '../../ViewEmployees/employeesSlice'
 
+/**
+ * Custom hook to update the data based on the filter value
+ * @returns the filtered list along with the function to perform the filter
+ */
 const useSearch = ({
   data = [],
   fieldsSearched,
@@ -12,6 +16,11 @@ const useSearch = ({
 }): [Employee[], (value: string) => void] => {
   const [tableData, setTableData] = useState(data)
 
+  /**
+   * Updates the state with the new list of data returned by the filtered array method
+   * @param value representing the value to filter the data on
+   * @returns nothing
+   */
   const filter = (value: string) => {
     if (!value.length) {
       setTableData(data)
@@ -23,6 +32,11 @@ const useSearch = ({
       : new RegExp(`${value}`, 'i')
 
     const dataFound = data.reduce((listOfItems: Employee[], item: Employee) => {
+      /**
+       * Determines if the element match the filter or not
+       * @param isMatched
+       * @returns
+       */
       const keepValue = (isMatched: boolean) => {
         if (isMatched) {
           listOfItems.push(item)
@@ -31,11 +45,15 @@ const useSearch = ({
         return true
       }
 
+      /* Since the user did not specify on which column to filter, 
+      it is assumed all columns must be used*/
       if (!fieldsSearched.length) {
         Object.values(item).every((key) => {
           return keepValue(key.match(regexToMatch))
         })
       } else {
+        // Columns to filter on have been specified, so we check the matching
+        // only for these columns
         Object.values(item).every((key) => {
           return keepValue(
             fieldsSearched.includes(key) && key.match(regexToMatch)
