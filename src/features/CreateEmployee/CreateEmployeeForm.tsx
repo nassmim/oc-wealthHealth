@@ -19,16 +19,9 @@ import DatePickerCustomCalendar from './DatePicker/DatePickerCustomCalendar.tsx'
 import renderCustomDatePickerHeader from './DatePicker/DatePickerCustomHeader.tsx'
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
-import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import { useEffect, useRef, useState } from 'react'
-import { useGetStatesQuery } from '../api/apiGenericDataSlice.ts'
+import { useEffect, useState } from 'react'
 import useGetStates from './useGetStates.ts'
-
-const companyDepartmentOptions: OptionValue[] = [
-  { value: 'alamaba', label: 'Alamaba' },
-  { value: 'alaska', label: 'Alaska' },
-  { value: 'arizona', label: 'Arizona' },
-]
+import useGetCompanyDepartments from './useGetCompanyDepartments.ts'
 
 const CreateEmployeeForm = () => {
   const [
@@ -36,10 +29,8 @@ const CreateEmployeeForm = () => {
     { isSuccess: employeeCreationSucceeded, isError: employeeCreationFailed },
   ] = useAddEmployeeMutation()
 
-  const { data: states, isSuccess: statesFetchingSucceeded } =
-    useGetStatesQuery(undefined)
-
-  const statesAsDropdownOptions = useGetStates(states)
+  const statesAsDropdownOptions = useGetStates()
+  const companyDepartmentsAsDropdownOptions = useGetCompanyDepartments()
 
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const {
@@ -64,17 +55,6 @@ const CreateEmployeeForm = () => {
 
     addEmployeeTrigger(dataFormatted)
   }
-
-  useEffect(() => {
-    if (statesFetchingSucceeded) {
-      const statesOptions = states.map((state) => {
-        return {
-          value: state.abbreviation,
-          label: state.name,
-        }
-      })
-    }
-  }, [statesFetchingSucceeded])
 
   useEffect(() => {
     if (employeeCreationFailed || employeeCreationSucceeded)
@@ -220,7 +200,7 @@ const CreateEmployeeForm = () => {
                     render={({ field: { onChange } }) => (
                       <>
                         <SelectDropdown
-                          options={companyDepartmentOptions}
+                          options={companyDepartmentsAsDropdownOptions}
                           inputId="department"
                           onChange={(option) => onChange(option?.label)}
                           placeholder="Select his department"

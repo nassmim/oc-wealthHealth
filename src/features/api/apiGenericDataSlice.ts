@@ -6,7 +6,12 @@ export const apiGenericSlice = apiSlice.injectEndpoints({
       query: () => '/states',
       keepUnusedDataFor: 24 * 60 * 60,
     }),
+    getCompanyDepartments: builder.query({
+      query: () => '/departments',
+      keepUnusedDataFor: 24 * 60 * 60,
+    }),
   }),
 })
 
-export const { useGetStatesQuery } = apiGenericSlice
+export const { useGetStatesQuery, useGetCompanyDepartmentsQuery } =
+  apiGenericSlice
