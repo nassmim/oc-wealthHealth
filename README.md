@@ -65,6 +65,21 @@ The page will reload when you make changes.You may also see any lint errors in t
 #### `npm run build`
 
 - A [build command](https://vitejs.dev/guide/build.html) that bundles your code with [Rollup](https://rollupjs.org), pre-configured to output highly optimized static assets for production.
+  The built will be placed at dist. You can use the property build.outDir in your config file to change the directory.
+
+#### `npm run preview`
+
+Once the built is done, you can preview it locally running this script.
+It should be served at [http://localhost:4173](http://localhost:4173).
+But you can replace this port by passing the --port flag as an argument in your package json:
+
+```js
+{
+  "scripts": {
+    "preview": "vite preview --port 8080"
+  }
+}
+```
 
 ### 1.5 API
 
