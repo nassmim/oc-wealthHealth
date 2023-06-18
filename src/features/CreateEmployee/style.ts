@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { CSSObjectWithLabel } from 'react-select'
 
 export const SectionEmployeeForm = styled.div`
   display: flex;
@@ -108,3 +109,24 @@ export const DepartmentField = styled(FieldStyled)`
     width: 100%;
   }
 `
+
+export const selectDropdownStyles = {
+  control: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
+    backgroundColor: 'lightcyan',
+    paddingTop: '2px',
+    paddingBottom: '2px',
+  }),
+  valueContainer: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+  }),
+  input: (baseStyles: CSSObjectWithLabel) => ({
+    ...baseStyles,
+    paddingTop: '0px',
+    paddingBottom: '0px',
+    marginTop: '0px',
+    marginBottom: '0px',
+  }),
+}
