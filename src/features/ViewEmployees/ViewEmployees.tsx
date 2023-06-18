@@ -122,16 +122,24 @@ const ViewEmployees = () => {
             pagesNumberVisible={true}
             paginateArrowProps={{
               previous: {
-                src: PaginateLeftArrow,
-                alt: 'Previous page',
-                width: '20px',
-                rotate: '0deg',
+                attributes: {
+                  src: PaginateLeftArrow,
+                  alt: 'Previous page',
+                },
+                style: {
+                  width: '20px',
+                  rotate: `rotate(0deg)`,
+                },
               },
               next: {
-                src: PaginateLeftArrow,
-                alt: 'Next page',
-                width: '20px',
-                rotate: '180deg',
+                attributes: {
+                  src: PaginateLeftArrow,
+                  alt: 'Next page',
+                },
+                style: {
+                  width: '20px',
+                  transform: `rotate(180deg)`,
+                },
               },
             }}
             textForDataNull="There is no employee in your company. Please add them from the form"

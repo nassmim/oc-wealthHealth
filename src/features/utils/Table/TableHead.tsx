@@ -39,8 +39,7 @@ const TableHead = ({
                 <Arrow
                   src={PaginateLeftArrow}
                   alt="Sort ascending"
-                  width="10px"
-                  rotate="90deg"
+                  style={{ width: '10px', transform: `rotate(90deg)` }}
                   className={
                     'sort-arrow' +
                     ' ' +
@@ -52,8 +51,7 @@ const TableHead = ({
                 <Arrow
                   src={PaginateLeftArrow}
                   alt="Sort descending"
-                  width="10px"
-                  rotate="-90deg"
+                  style={{ width: '10px', transform: `rotate(-90deg)` }}
                   className={
                     'sort-arrow' +
                     ' ' +

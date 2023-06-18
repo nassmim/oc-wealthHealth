@@ -79,22 +79,21 @@ export const Arrow = styled.img.attrs((props) => ({
   className: props.className,
 }))`
   ${(props) => {
-    return `
-      width: ${props.width};
-      cursor: ${props.cursor};
-      transform: rotate(${props.rotate});
-      opacity: ${props.opacity};
-    `
+    if (props.style) {
+      console.log(props.style)
+      return `
+        width: ${props.width};
+        cursor: ${props.style?.cursor};
+        transform: rotate(${props.style?.rotate});
+        opacity: ${props.style?.opacity};
+      `
+    }
   }}
 `
 
 export const NoData = styled.p`
-  ${(props) => {
-    return `
-      display: flex;
-      justify-content: center;
-      font-weight: bold;
-      margin-top: 20px;
-    `
-  }}
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+  margin-top: 20px;
 `

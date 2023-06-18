@@ -63,7 +63,7 @@ const DisplayTable = ({
   searchLabel?: string
   isPaginable?: boolean
   pagesNumberVisible?: boolean
-  paginateArrowProps: { [key: string]: any }
+  paginateArrowProps?: { [key: string]: any }
   textForDataNull: string
   textForDataFilteredNull: string
 }) => {
@@ -285,9 +285,12 @@ const DisplayTable = ({
           </p>
           <div className="arrows">
             <Arrow
-              {...paginateArrowProps.previous}
-              cursor={pagePreviousIsClickable ? 'pointer' : 'cursor'}
-              opacity={pagePreviousIsClickable ? '1' : '0.5'}
+              {...paginateArrowProps?.previous?.attributes}
+              style={{
+                ...paginateArrowProps?.previous?.style,
+                cursor: pagePreviousIsClickable ? 'pointer' : 'cursor',
+                opacity: pagePreviousIsClickable ? '1' : '0.5',
+              }}
               onClick={() =>
                 pagePreviousIsClickable
                   ? setPageNumber(pageNumber - 1)
@@ -309,9 +312,12 @@ const DisplayTable = ({
                 </p>
               ))}
             <Arrow
-              {...paginateArrowProps.next}
-              cursor={pageNextIsClickable ? 'pointer' : 'cursor'}
-              opacity={pageNextIsClickable ? '1' : '0.5'}
+              {...paginateArrowProps?.next?.attributes}
+              style={{
+                ...paginateArrowProps?.next?.style,
+                cursor: pageNextIsClickable ? 'pointer' : 'cursor',
+                opacity: pageNextIsClickable ? '1' : '0.5',
+              }}
               onClick={() =>
                 pageNextIsClickable ? setPageNumber(pageNumber + 1) : undefined
               }
