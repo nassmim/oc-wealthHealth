@@ -20,19 +20,9 @@ import renderCustomDatePickerHeader from './DatePicker/DatePickerCustomHeader.ts
 import SelectDropdown from '../../shared/Inputs/SelectDropdown.tsx'
 import SuccessModal from './SuccessModal.tsx'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useGetStatesQuery } from '../api/apiGenericDataSlice.ts'
-
-type State = {
-  name: string
-  abbreviation: string
-}
-
-const statesOptions: OptionValue[] = [
-  { value: 'alamaba', label: 'Alamaba' },
-  { value: 'alaska', label: 'Alaska' },
-  { value: 'arizona', label: 'Arizona' },
-]
+import useGetStates from './useGetStates.ts'
 
 const companyDepartmentOptions: OptionValue[] = [
   { value: 'alamaba', label: 'Alamaba' },
@@ -49,16 +39,8 @@ const CreateEmployeeForm = () => {
   const { data: states, isSuccess: statesFetchingSucceeded } =
     useGetStatesQuery(undefined)
 
-  const statesAsDropdownOptions = useMemo((): OptionValue[] => {
-    return states?.map((state: State) => {
-      return {
-        value: state.abbreviation,
-        label: state.name,
-      }
-    })
-  }, [states])
+  const statesAsDropdownOptions = useGetStates(states)
 
-  const statesOption = useRef()
   const [modalIsOpen, setModalIsOpen] = useState(false)
   const {
     register,
