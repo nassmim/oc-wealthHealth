@@ -62,15 +62,17 @@ const TableHead = ({
                     />
                     <Arrow
                       style={{
-                        ...sortArrowsProps?.ascending?.style,
+                        ...sortArrowsProps?.descending?.style,
                         width:
-                          sortArrowsProps?.ascending?.style.width || '10px',
+                          sortArrowsProps?.descending?.style.width || '10px',
                         transform:
-                          sortArrowsProps?.ascending?.style.transform ||
+                          sortArrowsProps?.descending?.style.transform ||
                           `rotate(-90deg)`,
                       }}
-                      alt={sortArrowsProps?.ascending?.alt || 'Sort descending'}
-                      src={sortArrowsProps?.ascending?.src || ArrowSVG}
+                      alt={
+                        sortArrowsProps?.descending?.alt || 'Sort descending'
+                      }
+                      src={sortArrowsProps?.descending?.src || ArrowSVG}
                       className={
                         'sort-arrow' +
                         ' ' +

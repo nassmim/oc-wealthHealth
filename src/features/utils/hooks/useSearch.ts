@@ -11,7 +11,7 @@ const useSearch = ({
   searchOnFullWord,
 }: {
   data: DataRows
-  fieldsSearched: [keyof DataRow][]
+  fieldsSearched: (keyof DataRow)[]
   searchOnFullWord: boolean
 }): [DataRows, (value: string) => void] => {
   const [tableData, setTableData] = useState(data)
@@ -48,15 +48,15 @@ const useSearch = ({
       /* Since the user did not specify on which column to filter, 
       it is assumed all columns must be used*/
       if (!fieldsSearched.length) {
-        Object.values(item).every((key) => {
-          return keepValue(key.match(regexToMatch))
+        Object.values(item).every((val) => {
+          return keepValue(val.match(regexToMatch))
         })
       } else {
         // Columns to filter on have been specified, so we check the matching
         // only for these columns
-        Object.values(item).every((key) => {
+        Object.entries(item).every((entry) => {
           return keepValue(
-            fieldsSearched.includes(key) && key.match(regexToMatch)
+            fieldsSearched.includes(entry[0]) && entry[1].match(regexToMatch)
           )
         })
       }

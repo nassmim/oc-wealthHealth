@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { OptionValue } from '../../shared/Inputs/SelectDropdown.tsx'
 import { useGetCompanyDepartmentsQuery } from '../api/apiGenericDataSlice.ts'
 
-const useGetCompanyDepartments = () => {
+const useGetCompanyDepartments = (): OptionValue[] => {
   const { data: companyDepartments } = useGetCompanyDepartmentsQuery(undefined)
 
   const companyDepartmentsAsDropdownOptions = useMemo((): OptionValue[] => {

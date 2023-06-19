@@ -105,7 +105,7 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
-            // initialSort={{ column: 'firstName', order: 'asc' }}
+            // initialSort={{ column: 'startDate', order: 'asc' }}
             // sortArrowsProps={{
             //   ascending: {src: , alt: , style: {}},
             //   descending: {src: , alt: , style: {}},
@@ -118,28 +118,24 @@ const ViewEmployees = () => {
             }
             entriesUnits={entriesNumberOptionsProps.entriesUnits}
             isSearchable={true}
-            // fieldsSearched={[]}
+            // fieldsSearched={['street', 'city']}
             searchOnFullWord={false}
             searchLabel="Search"
-            searchInputsProps={{ id: 'search-employee' }}
+            // searchInputsProps={{ id: 'search-employee' }}
             isPaginable={true}
             pagesNumberVisible={true}
             paginateArrowProps={{
               previous: {
-                attributes: {
-                  src: PaginateLeftArrow,
-                  alt: 'Previous page',
-                },
+                src: PaginateLeftArrow,
+                alt: 'Previous page',
                 style: {
                   width: '20px',
                   rotate: `rotate(0deg)`,
                 },
               },
               next: {
-                attributes: {
-                  src: PaginateLeftArrow,
-                  alt: 'Next page',
-                },
+                src: PaginateLeftArrow,
+                alt: 'Next page',
                 style: {
                   width: '20px',
                   transform: `rotate(180deg)`,
