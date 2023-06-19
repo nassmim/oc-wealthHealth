@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Employee } from '../../../ViewEmployees/employeesSlice'
+import { DataRow, DataRows } from '../../types/types'
 
 /**
  * Custom hook to update the data sorted on the specific column and order
@@ -7,9 +7,9 @@ import { Employee } from '../../../ViewEmployees/employeesSlice'
  * informing the parent component that the list has been sorted
  */
 const useSortTable = (
-  data: Employee[] = []
+  data: DataRows = []
 ): [
-  Employee[],
+  DataRows,
   (sortingField: string, sortingOrder: string) => void,
   boolean
 ] => {
@@ -27,13 +27,13 @@ const useSortTable = (
   const sortData = (sortingField: string, sortingOrder: string): void => {
     const dataSorted = [...data].sort((a, b): number => {
       let result: number
-      if (a[sortingField as keyof Employee] === null) result = 1
-      else if (b[sortingField as keyof Employee] === null) result = -1
+      if (a[sortingField as keyof DataRow] === null) result = 1
+      else if (b[sortingField as keyof DataRow] === null) result = -1
       else {
         result =
-          a[sortingField as keyof Employee]
+          a[sortingField as keyof DataRow]
             .toString()
-            .localeCompare(b[sortingField as keyof Employee].toString(), 'en', {
+            .localeCompare(b[sortingField as keyof DataRow].toString(), 'en', {
               numeric: true,
             }) * (sortingOrder === 'asc' ? 1 : -1)
       }

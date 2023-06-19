@@ -1,25 +1,30 @@
-import { EmployeesTableStyled } from './style.ts'
+import { TableStyled } from './style.ts'
 
 import TableHead from './TableHead.tsx'
 import TableBody from './TableBody.tsx'
-import type { TableColumn } from '../types.ts'
-import { Employee } from '../../ViewEmployees/employeesSlice.ts'
+import type { TableColumn, DataRows } from '../types/types.ts'
 
-const EmployeesTable = ({
+const Table = ({
   data,
   columns,
   sortData,
+  sortArrowsProps,
 }: {
-  data: Employee[]
+  data: DataRows
   columns: TableColumn[]
   sortData: (sortingField: string, sortingOrder: string) => void
+  sortArrowsProps?: { [key: string]: any }
 }) => {
   return (
-    <EmployeesTableStyled>
-      <TableHead columns={columns} sortData={sortData} />
+    <TableStyled>
+      <TableHead
+        columns={columns}
+        sortData={sortData}
+        sortArrowsProps={sortArrowsProps}
+      />
       <TableBody columns={columns} employees={data} />
-    </EmployeesTableStyled>
+    </TableStyled>
   )
 }
 
-export default EmployeesTable
+export default Table
