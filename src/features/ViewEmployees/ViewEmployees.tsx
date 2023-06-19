@@ -105,7 +105,7 @@ const ViewEmployees = () => {
           <DisplayTable
             data={employees}
             columns={columns}
-            initialSort={{ column: 'startDate', order: 'asc' }}
+            // initialSort={{ column: 'startDate', order: 'asc' }}
             // sortArrowsProps={{
             //   ascending: {src: , alt: , style: {}},
             //   descending: {src: , alt: , style: {}},

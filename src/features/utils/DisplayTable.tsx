@@ -18,8 +18,7 @@ import Table from './Table/Table.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
 
-import { TableColumn, OptionValue } from './types/types'
-import { Employee } from '../ViewEmployees/employeesSlice.ts'
+import { TableColumn, OptionValue, DataRow, DataRows } from './types/types'
 
 import ArrowSVG from '../../assets/pagination-left-arrow.svg'
 
@@ -49,15 +48,15 @@ const DisplayTable = ({
   textForDataNull = 'There is no data yet', // text to display if there is no data
   textForDataFilteredNull = 'There are o results from your search', // text to display if the research didn't get any results
 }: {
-  data: Employee[]
+  data: DataRows
   columns: TableColumn[]
-  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
+  initialSort?: { column: keyof DataRow; order: 'asc' | 'desc' }
   sortArrowsProps?: { [key: string]: any }
   entriesNumberOptionsProps: { [key: string]: any }
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof Employee][]
+  fieldsSearched?: [keyof DataRow][]
   searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
@@ -130,7 +129,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: Employee, b: Employee) =>
+          (a: DataRow, b: DataRow) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -183,7 +182,7 @@ const DisplayTable = ({
    */
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: Employee[]
+    dataToUse: DataRows
   ) => {
     if (valueToBeTrue) {
       // Since data has been altered, we need to store it as future operations
@@ -200,7 +199,7 @@ const DisplayTable = ({
    * @param dataToSlice reprensent the full data contained in the table
    * @param offset represents the pagination number
    */
-  const sliceData = (dataToSlice: Employee[], offset?: number) => {
+  const sliceData = (dataToSlice: DataRows, offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     // First condition is if no size is defined, then the whole data is displayed
