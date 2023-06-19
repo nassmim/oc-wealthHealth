@@ -118,10 +118,10 @@ const ViewEmployees = () => {
             }
             entriesUnits={entriesNumberOptionsProps.entriesUnits}
             isSearchable={true}
-            // fieldsSearched={[]}
+            // fieldsSearched={['street', 'city']}
             searchOnFullWord={false}
             searchLabel="Search"
-            searchInputsProps={{ id: 'search-employee' }}
+            // searchInputsProps={{ id: 'search-employee' }}
             isPaginable={true}
             pagesNumberVisible={true}
             paginateArrowProps={{

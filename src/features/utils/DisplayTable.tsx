@@ -56,7 +56,7 @@ const DisplayTable = ({
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof DataRow][]
+  fieldsSearched?: (keyof DataRow)[]
   searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
