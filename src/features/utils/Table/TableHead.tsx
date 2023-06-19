@@ -1,14 +1,17 @@
 import { Arrow } from '../style.ts'
-import PaginateLeftArrow from '../../../assets/pagination-left-arrow.svg'
-import type { TableColumn } from '../types.ts'
+import type { TableColumn } from '../types/types.ts'
 import { useState } from 'react'
+
+import ArrowSVG from '../../../assets/pagination-left-arrow.svg'
 
 const TableHead = ({
   columns,
   sortData,
+  sortArrowsProps,
 }: {
   columns: TableColumn[]
   sortData: (accessor: string, order: string) => void
+  sortArrowsProps?: { [key: string]: any }
 }) => {
   const [sortingField, setSortingField] = useState('')
   const [sortingOrder, setSortingOrder] = useState('')
@@ -35,32 +38,50 @@ const TableHead = ({
           >
             <div className="title">
               <p>{label}</p>
-              <div className="arrows">
-                <Arrow
-                  src={PaginateLeftArrow}
-                  alt="Sort ascending"
-                  style={{ width: '10px', transform: `rotate(90deg)` }}
-                  className={
-                    'sort-arrow' +
-                    ' ' +
-                    (!sortingOrder || sortingOrder === 'asc'
-                      ? 'visible'
-                      : 'hidden')
-                  }
-                />
-                <Arrow
-                  src={PaginateLeftArrow}
-                  alt="Sort descending"
-                  style={{ width: '10px', transform: `rotate(-90deg)` }}
-                  className={
-                    'sort-arrow' +
-                    ' ' +
-                    (!sortingOrder || sortingOrder === 'desc'
-                      ? 'visible'
-                      : 'hidden')
-                  }
-                />
-              </div>
+              {sortable && (
+                <>
+                  <div className="arrows">
+                    <Arrow
+                      style={{
+                        ...sortArrowsProps?.ascending?.style,
+                        width:
+                          sortArrowsProps?.ascending?.style.width || '10px',
+                        transform:
+                          sortArrowsProps?.ascending?.style.transform ||
+                          `rotate(90deg)`,
+                      }}
+                      alt={sortArrowsProps?.ascending?.alt || 'Sort ascending'}
+                      src={sortArrowsProps?.ascending?.src || ArrowSVG}
+                      className={
+                        'sort-arrow' +
+                        ' ' +
+                        (!sortingOrder || sortingOrder === 'asc'
+                          ? 'visible'
+                          : 'hidden')
+                      }
+                    />
+                    <Arrow
+                      style={{
+                        ...sortArrowsProps?.ascending?.style,
+                        width:
+                          sortArrowsProps?.ascending?.style.width || '10px',
+                        transform:
+                          sortArrowsProps?.ascending?.style.transform ||
+                          `rotate(-90deg)`,
+                      }}
+                      alt={sortArrowsProps?.ascending?.alt || 'Sort descending'}
+                      src={sortArrowsProps?.ascending?.src || ArrowSVG}
+                      className={
+                        'sort-arrow' +
+                        ' ' +
+                        (!sortingOrder || sortingOrder === 'desc'
+                          ? 'visible'
+                          : 'hidden')
+                      }
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </th>
         ))}

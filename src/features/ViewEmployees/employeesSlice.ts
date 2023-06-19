@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { DataRow } from '../utils/types/types'
 
-export interface Employee {
+export interface Employee extends DataRow {
   firstName: string
   lastName: string
   startDate: string

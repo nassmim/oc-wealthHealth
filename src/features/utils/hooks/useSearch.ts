@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Employee } from '../../ViewEmployees/employeesSlice'
+import { DataRow, DataRows } from '../types/types'
 
 /**
  * Custom hook to update the data based on the filter value
@@ -10,10 +10,10 @@ const useSearch = ({
   fieldsSearched,
   searchOnFullWord,
 }: {
-  data: Employee[]
-  fieldsSearched: [keyof Employee][]
+  data: DataRows
+  fieldsSearched: [keyof DataRow][]
   searchOnFullWord: boolean
-}): [Employee[], (value: string) => void] => {
+}): [DataRows, (value: string) => void] => {
   const [tableData, setTableData] = useState(data)
 
   /**
@@ -31,7 +31,7 @@ const useSearch = ({
       ? new RegExp(`(\\s|^)${value}`, 'i')
       : new RegExp(`${value}`, 'i')
 
-    const dataFound = data.reduce((listOfItems: Employee[], item: Employee) => {
+    const dataFound = data.reduce((listOfItems: DataRows, item: DataRow) => {
       /**
        * Determines if the element match the filter or not
        * @param isMatched

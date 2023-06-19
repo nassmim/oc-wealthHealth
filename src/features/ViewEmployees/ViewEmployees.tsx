@@ -7,7 +7,7 @@ import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
-import { TableColumn } from '../utils/types.ts'
+import { TableColumn } from '../utils/types/types.ts'
 import DisplayTable from '../utils/DisplayTable.tsx'
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts'
 import { employeesFetched } from './employeesSlice.ts'
@@ -106,6 +106,10 @@ const ViewEmployees = () => {
             data={employees}
             columns={columns}
             // initialSort={{ column: 'firstName', order: 'asc' }}
+            // sortArrowsProps={{
+            //   ascending: {src: , alt: , style: {}},
+            //   descending: {src: , alt: , style: {}},
+            // }}
             entriesNumberOptionsProps={
               entriesNumberOptionsProps.selectNativeProps
             }

@@ -1,20 +1,19 @@
-import { Employee } from '../../ViewEmployees/employeesSlice.ts'
-import type { TableColumn } from '../types.ts'
+import type { TableColumn, DataRow, DataRows } from '../types/types.ts'
 
 const TableBody = ({
   employees,
   columns,
 }: {
-  employees: Employee[]
+  employees: DataRows
   columns: TableColumn[]
 }) => {
   return (
     <tbody>
-      {employees.map((employee: Employee, index: number) => (
+      {employees.map((employee: DataRow, index: number) => (
         <tr key={`${index}-${employee.firstName}`}>
           {columns.map(({ accessor }, index) => {
-            const value = employee[accessor as keyof Employee]
-              ? employee[accessor as keyof Employee]
+            const value = employee[accessor as keyof DataRow]
+              ? employee[accessor as keyof DataRow]
               : '——'
             return <td key={index}>{value}</td>
           })}

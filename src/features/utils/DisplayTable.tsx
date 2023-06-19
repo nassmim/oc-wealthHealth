@@ -14,26 +14,14 @@ import {
 
 import Select from 'react-select'
 
-import EmployeesTable from './Table/Table.tsx'
+import Table from './Table/Table.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
 
-type TableColumn = {
-  label: string
-  accessor: string
-  sortable: boolean
-}
+import { TableColumn, OptionValue } from './types/types'
+import { Employee } from '../ViewEmployees/employeesSlice.ts'
 
-type OptionValue = {
-  value: string
-  label: string
-}
-
-type DataRow = {
-  [key: string]: any
-}
-
-type DataTable = DataRow[]
+import ArrowSVG from '../../assets/pagination-left-arrow.svg'
 
 /**
  * Component that shows a table data to the user and different options to
@@ -46,7 +34,8 @@ const DisplayTable = ({
   data, // data contained in the table
   columns, // headers of the table
   initialSort, // is data sorted in a specific way at page load?
-  entriesNumberOptionsProps, // the select options to set the table size
+  sortArrowsProps, // any property natively used by HTML img element
+  entriesNumberOptionsProps, // the select options props to set the table size
   showEntriesNumberText = 'Show', // the label for the table size select dropdown
   entriesUnits = 'entries', // the table size units label
   isSearchable = false, // can the user make a research to filter data?
@@ -60,14 +49,15 @@ const DisplayTable = ({
   textForDataNull = 'There is no data yet', // text to display if there is no data
   textForDataFilteredNull = 'There are o results from your search', // text to display if the research didn't get any results
 }: {
-  data: DataTable
+  data: Employee[]
   columns: TableColumn[]
-  initialSort?: { column: keyof DataRow; order: 'asc' | 'desc' }
+  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
+  sortArrowsProps?: { [key: string]: any }
   entriesNumberOptionsProps: { [key: string]: any }
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof DataRow][]
+  fieldsSearched?: [keyof Employee][]
   searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
@@ -124,7 +114,7 @@ const DisplayTable = ({
       const dataSlice = [numberOfEntries * (page - 1), numberOfEntries * page]
       return dataSlice
     },
-    [pageNumber]
+    []
   )
 
   const handleEntriesNumberChange = (newValue: unknown) => {
@@ -140,7 +130,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: DataRow, b: DataRow) =>
+          (a: Employee, b: Employee) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -193,7 +183,7 @@ const DisplayTable = ({
    */
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: DataTable
+    dataToUse: Employee[]
   ) => {
     if (valueToBeTrue) {
       // Since data has been altered, we need to store it as future operations
@@ -210,7 +200,7 @@ const DisplayTable = ({
    * @param dataToSlice reprensent the full data contained in the table
    * @param offset represents the pagination number
    */
-  const sliceData = (dataToSlice: DataTable, offset?: number) => {
+  const sliceData = (dataToSlice: Employee[], offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     // First condition is if no size is defined, then the whole data is displayed
@@ -295,7 +285,8 @@ const DisplayTable = ({
           </p>
           <div className="arrows">
             <Arrow
-              {...paginateArrowProps?.previous?.attributes}
+              alt={paginateArrowProps?.previous?.alt || 'Previous page'}
+              src={paginateArrowProps?.previous?.src || ArrowSVG}
               style={{
                 ...paginateArrowProps?.previous?.style,
                 cursor: pagePreviousIsClickable ? 'pointer' : 'cursor',
@@ -322,7 +313,8 @@ const DisplayTable = ({
                 </p>
               ))}
             <Arrow
-              {...paginateArrowProps?.next?.attributes}
+              alt={paginateArrowProps?.next?.alt || 'Next page'}
+              src={paginateArrowProps?.next?.src || ArrowSVG}
               style={{
                 ...paginateArrowProps?.next?.style,
                 cursor: pageNextIsClickable ? 'pointer' : 'cursor',
@@ -336,10 +328,11 @@ const DisplayTable = ({
         </TablePagination>
       )}
       <div>
-        <EmployeesTable
+        <Table
           data={tableDataSliced}
           columns={columns}
           sortData={sortData}
+          sortArrowsProps={sortArrowsProps}
         />
         {!tableData.length && (
           <NoData>
