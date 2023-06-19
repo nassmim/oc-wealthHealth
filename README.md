@@ -49,9 +49,8 @@ Once Node.js has been successfully added to your IDE, you'll need to:
 Afterwards you'll need to install all the project dependencies with `pnpm install`
 
 #### react-datatable-ne
-This library is not mandatory. It is our custom library for displaying data in a table. 
-If you want to test it, install it (if you have run `pnpm install`, then it is already installed)
-Once installed, to test it, you can go to the tsx file named 'ViewEmployees.tsx' located here:
+This library is not mandatory. It is our custom library whose purpose is to display data in a customizable table <br/>
+If you want to test it, install it (if you have run `pnpm install`, then it is already installed) and then go to the tsx file named 'ViewEmployees.tsx' located here: <br/>
 
 ```
 oc-wealthhealth/
@@ -85,7 +84,7 @@ In the project directory, you can run:
 Runs the app in the development mode.
 It should launch automatically the web application in your default browser.
 If not, you can copy paste this link :
-[http://localhost:5173](http://localhost:5173) to view it in your browser.
+[http://localhost:5173](http://localhost:5173) to view it in your browser.<br/>
 *⚠ Replace 5173 with the corrected port used by vite *⚠
 
 The page will reload when you make changes.You may also see any lint errors in the console.
