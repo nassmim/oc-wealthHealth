@@ -36,30 +36,34 @@ const TableHead = ({
             <div className="title">
               <p>{label}</p>
               <div className="arrows">
-                <Arrow
-                  src={PaginateLeftArrow}
-                  alt="Sort ascending"
-                  style={{ width: '10px', transform: `rotate(90deg)` }}
-                  className={
-                    'sort-arrow' +
-                    ' ' +
-                    (!sortingOrder || sortingOrder === 'asc'
-                      ? 'visible'
-                      : 'hidden')
-                  }
-                />
-                <Arrow
-                  src={PaginateLeftArrow}
-                  alt="Sort descending"
-                  style={{ width: '10px', transform: `rotate(-90deg)` }}
-                  className={
-                    'sort-arrow' +
-                    ' ' +
-                    (!sortingOrder || sortingOrder === 'desc'
-                      ? 'visible'
-                      : 'hidden')
-                  }
-                />
+                {sortable && (
+                  <>
+                    <Arrow
+                      src={PaginateLeftArrow}
+                      alt="Sort ascending"
+                      style={{ width: '10px', transform: `rotate(90deg)` }}
+                      className={
+                        'sort-arrow' +
+                        ' ' +
+                        (!sortingOrder || sortingOrder === 'asc'
+                          ? 'visible'
+                          : 'hidden')
+                      }
+                    />
+                    <Arrow
+                      src={PaginateLeftArrow}
+                      alt="Sort descending"
+                      style={{ width: '10px', transform: `rotate(-90deg)` }}
+                      className={
+                        'sort-arrow' +
+                        ' ' +
+                        (!sortingOrder || sortingOrder === 'desc'
+                          ? 'visible'
+                          : 'hidden')
+                      }
+                    />
+                  </>
+                )}
               </div>
             </div>
           </th>
