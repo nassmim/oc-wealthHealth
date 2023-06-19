@@ -126,20 +126,16 @@ const ViewEmployees = () => {
             pagesNumberVisible={true}
             paginateArrowProps={{
               previous: {
-                attributes: {
-                  src: PaginateLeftArrow,
-                  alt: 'Previous page',
-                },
+                src: PaginateLeftArrow,
+                alt: 'Previous page',
                 style: {
                   width: '20px',
                   rotate: `rotate(0deg)`,
                 },
               },
               next: {
-                attributes: {
-                  src: PaginateLeftArrow,
-                  alt: 'Next page',
-                },
+                src: PaginateLeftArrow,
+                alt: 'Next page',
                 style: {
                   width: '20px',
                   transform: `rotate(180deg)`,
