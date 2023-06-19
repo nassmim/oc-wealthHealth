@@ -47,6 +47,13 @@ const CreateEmployeeForm = () => {
     setModalIsOpen(visible)
   }
 
+  const formatDateValue = (value: Date) => {
+    const day = value.getDate().toString().padStart(2, '0')
+    const month = value.getMonth().toString().padStart(2, '0')
+    const year = value.getFullYear().toString().padStart(2, '0')
+    return `${month}/${day}/${year}`
+  }
+
   /**
    * @param data representing the employee information
    */
@@ -54,8 +61,8 @@ const CreateEmployeeForm = () => {
     // birthdate and start data are converted to string as the data is stored in json format
     const dataFormatted = {
       ...data,
-      birthdate: data.birthdate.toDateString(),
-      startDate: data.startDate.toDateString(),
+      birthdate: formatDateValue(data.birthdate),
+      startDate: formatDateValue(data.startDate),
     }
 
     addEmployeeTrigger(dataFormatted)

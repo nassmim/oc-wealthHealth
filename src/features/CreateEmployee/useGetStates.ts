@@ -7,7 +7,7 @@ type State = {
   abbreviation: string
 }
 
-const useGetStates = () => {
+const useGetStates = (): OptionValue[] => {
   const { data: states } = useGetStatesQuery(undefined)
 
   const statesAsDropdownOptions = useMemo((): OptionValue[] => {
