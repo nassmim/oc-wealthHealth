@@ -7,7 +7,7 @@ import PaginateLeftArrow from '../../assets/pagination-left-arrow.svg'
 import { useCallback, useEffect, useState } from 'react'
 import { useLazyGetEmployeesQuery } from '../api/apiEmployeesSlice'
 
-import type { TableColumn } from './types.tsx'
+import { TableColumn } from '../utils/types.ts'
 import DisplayTable from '../utils/DisplayTable.tsx'
 import { useAppDispatch, useAppSelector } from '../../app/hooks.ts'
 import { employeesFetched } from './employeesSlice.ts'

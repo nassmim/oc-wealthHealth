@@ -3,7 +3,6 @@
  */
 
 import { useEffect, useMemo, useState, useRef, useCallback } from 'react'
-import { Employee } from '../ViewEmployees/employeesSlice.ts'
 import {
   EntriesLengthChoice,
   SearchField,
@@ -11,19 +10,30 @@ import {
   TablePagination,
   Arrow,
   NoData,
-} from '../ViewEmployees/style.ts'
+} from './style.ts'
 
 import Select from 'react-select'
 
 import EmployeesTable from './Table/Table.tsx'
-import type { TableColumn } from '../ViewEmployees/types.tsx'
 import useSortTable from './Table/hooks/useSortTable.ts'
 import useSearch from './hooks/useSearch.ts'
+
+type TableColumn = {
+  label: string
+  accessor: string
+  sortable: boolean
+}
 
 type OptionValue = {
   value: string
   label: string
 }
+
+type DataRow = {
+  [key: string]: any
+}
+
+type DataTable = DataRow[]
 
 /**
  * Component that shows a table data to the user and different options to
@@ -50,14 +60,14 @@ const DisplayTable = ({
   textForDataNull = 'There is no data yet', // text to display if there is no data
   textForDataFilteredNull = 'There are o results from your search', // text to display if the research didn't get any results
 }: {
-  data: Employee[]
+  data: DataTable
   columns: TableColumn[]
-  initialSort?: { column: keyof Employee; order: 'asc' | 'desc' }
+  initialSort?: { column: keyof DataRow; order: 'asc' | 'desc' }
   entriesNumberOptionsProps: { [key: string]: any }
   showEntriesNumberText?: string
   entriesUnits?: string
   isSearchable?: boolean
-  fieldsSearched?: [keyof Employee][]
+  fieldsSearched?: [keyof DataRow][]
   searchInputsProps: { [key: string]: any }
   searchOnFullWord?: boolean
   searchLabel?: string
@@ -130,7 +140,7 @@ const DisplayTable = ({
       return data
         .slice()
         .sort(
-          (a: Employee, b: Employee) =>
+          (a: DataRow, b: DataRow) =>
             a[initialSort.column].localeCompare(b[initialSort.column]) *
             (initialSort.order === 'asc' ? 1 : -1)
         )
@@ -183,7 +193,7 @@ const DisplayTable = ({
    */
   const setAndSliceTableData = (
     valueToBeTrue: boolean,
-    dataToUse: Employee[]
+    dataToUse: DataTable
   ) => {
     if (valueToBeTrue) {
       // Since data has been altered, we need to store it as future operations
@@ -200,7 +210,7 @@ const DisplayTable = ({
    * @param dataToSlice reprensent the full data contained in the table
    * @param offset represents the pagination number
    */
-  const sliceData = (dataToSlice: Employee[], offset?: number) => {
+  const sliceData = (dataToSlice: DataTable, offset?: number) => {
     let numberOfEntries: number, page: number | undefined
 
     // First condition is if no size is defined, then the whole data is displayed
